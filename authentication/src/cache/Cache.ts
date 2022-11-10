@@ -3,7 +3,7 @@ import {createClient, RedisClientType} from "redis";
 import {injectable} from "inversify";
 
 @injectable()
-export class Store {
+export class Cache {
 
     url: string;
     client?: RedisClientType | null = null;
@@ -15,12 +15,12 @@ export class Store {
     open = async (): Promise<void> => {
         this.client = createClient({url: this.url});
         this.client?.connect().then(() => {
-            console.log(`Connected to store: ${this.url}`);
+            console.log(`Connected to cache: ${this.url}`);
         }).catch(console.error);
     }
 
     close = async (): Promise<void> => this.client?.disconnect().then(() => {
-        console.log(`Disconnected from store: ${this.url}`);
+        console.log(`Disconnected from cache: ${this.url}`);
         this.client = null;
     }).catch(console.error);
 

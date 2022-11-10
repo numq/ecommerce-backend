@@ -10,6 +10,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.3",
     "@types/jsonwebtoken": "^8.5.9",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "fp-ts": "^2.13.1",
     "grpc-tools": "^1.11.3",

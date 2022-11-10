@@ -1,31 +1,31 @@
 import {afterAll, afterEach, beforeAll, describe, expect, test} from '@jest/globals';
-import {Store} from "./Store";
+import {Cache} from "./Cache";
 import {ConfigProvider} from "../config/ConfigProvider";
 import {TYPES} from "../di/types";
 import {container} from "../di/container";
 
 const configProvider = container.get<ConfigProvider>(TYPES.ConfigProvider);
-const store = new Store(configProvider.STORE_URL);
+const cache = new Cache(configProvider.CACHE_URL);
 
 beforeAll(async () => {
-    await store?.open();
+    await cache?.open();
 });
 
 afterEach(async () => {
-    await store.client?.flushDb();
+    await cache.client?.flushDb();
 });
 
 afterAll(async () => {
-    await store.close();
+    await cache.close();
 });
 
-describe("store tests", () => {
+describe("cache tests", () => {
     const key = "test_key", value = "test_value";
     test("should return null if key doesn't exists", async () => {
-        expect(await store.client?.get(key)).toBe(null);
+        expect(await cache.client?.get(key)).toBe(null);
     });
     test("should set value to key and return it", async () => {
-        await store.client?.set(key, value);
-        expect(await store.client?.get(key)).toBe(value);
+        await cache.client?.set(key, value);
+        expect(await cache.client?.get(key)).toBe(value);
     });
 });
