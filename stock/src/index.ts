@@ -1,0 +1,5 @@
+(async initialize => {
+    await initialize();
+})(() => {
+
+});
