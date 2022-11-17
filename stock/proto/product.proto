@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package product;
+
+import "category";
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  bytes imageBytes = 4;
+  float price = 5;
+  float discount = 6;
+  float weight = 7;
+  required category.Category category = 8;
+  repeated string tags = 9;
+  int32 quantity = 10;
+}
+
+message AddProductRequest {
+  Product product = 1;
+}
+
+message AddProductResponse {
+  Product product = 1;
+}
+
+message GetProductByIdRequest {
+  string id = 1;
+}
+
+message GetProductByIdResponse {
+  Product product = 1;
+}
+
+message GetProductsFromCategoryRequest {
+  string category_id = 1;
+  int32 skip = 2;
+  int32 limit = 3;
+}
+
+message GetProductsFromCategoryResponse {
+  repeated Product product = 1;
+}
+
+message UpdateProductRequest {
+  Product product = 1;
+}
+
+message UpdateProductResponse {
+  Product product = 1;
+}
+
+message RemoveProductRequest {
+  string id = 1;
+}
+
+message RemoveProductResponse {
+  string id = 1;
+}
+
+service ProductService {
+  rpc addProduct(AddProductRequest) returns (AddProductResponse);
+  rpc getProductById(GetProductByIdRequest) returns (GetProductByIdResponse);
+  rpc getProductsFromCategory(GetProductsFromCategoryRequest) returns (GetProductsFromCategoryResponse);
+  rpc updateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+  rpc removeProduct(RemoveProductRequest) returns (RemoveProductResponse);
+}
