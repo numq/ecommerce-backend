@@ -1,10 +1,8 @@
 syntax = "proto3";
 
-package product;
+import "category.proto";
 
-import "category";
-
-message Product {
+message ProductMessage {
   string id = 1;
   string name = 2;
   string description = 3;
@@ -12,17 +10,17 @@ message Product {
   float price = 5;
   float discount = 6;
   float weight = 7;
-  required category.Category category = 8;
+  CategoryMessage category = 8;
   repeated string tags = 9;
   int32 quantity = 10;
 }
 
 message AddProductRequest {
-  Product product = 1;
+  ProductMessage product = 1;
 }
 
 message AddProductResponse {
-  Product product = 1;
+  ProductMessage product = 1;
 }
 
 message GetProductByIdRequest {
@@ -30,7 +28,7 @@ message GetProductByIdRequest {
 }
 
 message GetProductByIdResponse {
-  Product product = 1;
+  ProductMessage product = 1;
 }
 
 message GetProductsFromCategoryRequest {
@@ -40,15 +38,15 @@ message GetProductsFromCategoryRequest {
 }
 
 message GetProductsFromCategoryResponse {
-  repeated Product product = 1;
+  repeated ProductMessage product = 1;
 }
 
 message UpdateProductRequest {
-  Product product = 1;
+  ProductMessage product = 1;
 }
 
 message UpdateProductResponse {
-  Product product = 1;
+  ProductMessage product = 1;
 }
 
 message RemoveProductRequest {
@@ -59,7 +57,7 @@ message RemoveProductResponse {
   string id = 1;
 }
 
-service ProductService {
+service ProductApi {
   rpc addProduct(AddProductRequest) returns (AddProductResponse);
   rpc getProductById(GetProductByIdRequest) returns (GetProductByIdResponse);
   rpc getProductsFromCategory(GetProductsFromCategoryRequest) returns (GetProductsFromCategoryResponse);

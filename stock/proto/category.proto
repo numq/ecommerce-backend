@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package category;
-
-message Category{
+message CategoryMessage{
   string id = 1;
   string name = 2;
   string description = 3;
@@ -10,11 +8,11 @@ message Category{
 }
 
 message AddCategoryRequest {
-  Category category = 1;
+  CategoryMessage category = 1;
 }
 
 message AddCategoryResponse {
-  Category category = 1;
+  CategoryMessage category = 1;
 }
 
 message GetCategoryByIdRequest {
@@ -22,7 +20,7 @@ message GetCategoryByIdRequest {
 }
 
 message GetCategoryByIdResponse {
-  Category category = 1;
+  CategoryMessage category = 1;
 }
 
 message GetCategoriesRequest {
@@ -31,15 +29,15 @@ message GetCategoriesRequest {
 }
 
 message GetCategoriesResponse {
-  repeated Category category = 1;
+  repeated CategoryMessage category = 1;
 }
 
 message UpdateCategoryRequest {
-  Category category = 1;
+  CategoryMessage category = 1;
 }
 
 message UpdateCategoryResponse {
-  Category category = 1;
+  CategoryMessage category = 1;
 }
 
 message RemoveCategoryRequest {
@@ -50,7 +48,7 @@ message RemoveCategoryResponse {
   string id = 1;
 }
 
-service CategoryService {
+service CategoryApi {
   rpc addCategory(AddCategoryRequest) returns (AddCategoryResponse);
   rpc getCategoryById(GetCategoryByIdRequest) returns (GetCategoryByIdResponse);
   rpc getCategories(GetCategoriesRequest) returns (GetCategoriesResponse);
