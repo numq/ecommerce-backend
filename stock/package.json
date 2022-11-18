@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.ts",
+    "build": "npx mkdirp ./proto/out && npx grpc_tools_node_protoc --plugin=protoc-gen-ts=.\\node_modules\\.bin\\protoc-gen-ts.cmd --js_out=import_style=commonjs,binary:./proto/out --ts_out=./proto/out -I=./proto ./proto/*.proto",
+    "start": "build & node src/index.ts",
     "test": "jest"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.7.3",
     "dotenv": "^16.0.3",
     "fp-ts": "^2.13.1",
-    "grpc-tools": "^1.11.3",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
     "inversify": "^6.0.1",
     "mongodb": "^4.11.0",
     "reflect-metadata": "^0.1.13",
