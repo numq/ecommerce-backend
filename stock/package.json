@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "npx mkdirp ./proto/out && npx grpc_tools_node_protoc --plugin=protoc-gen-ts=.\\node_modules\\.bin\\protoc-gen-ts.cmd --js_out=import_style=commonjs,binary:./proto/out --ts_out=./proto/out -I=./proto ./proto/*.proto",
+    "generate-proto-js": "npx mkdirp ./proto/generated && npx grpc_tools_node_protoc --plugin=protoc-gen-grpc=.\\node_modules\\.bin\\grpc_tools_node_protoc_plugin.cmd --js_out=import_style=commonjs,binary:./proto/generated --grpc_out=./proto/generated -I=./proto ./proto/*.proto",
+    "generate-proto-ts": "npx mkdirp ./proto/generated && npx grpc_tools_node_protoc --plugin=protoc-gen-grpc=.\\node_modules\\.bin\\protoc-gen-ts.cmd --ts_out=./proto/generated -I=./proto ./proto/*.proto",
+    "build": "npm run generate-proto-js && npm run generate-proto-ts",
     "start": "build & node src/index.ts",
     "test": "jest"
   },
@@ -12,6 +14,7 @@
     "dotenv": "^16.0.3",
     "fp-ts": "^2.13.1",
     "grpc_tools_node_protoc_ts": "^5.3.2",
+    "grpc-tools": "^1.11.3",
     "inversify": "^6.0.1",
     "mongodb": "^4.11.0",
     "reflect-metadata": "^0.1.13",

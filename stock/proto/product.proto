@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-import "category.proto";
-
-message ProductMessage {
+message Product {
   string id = 1;
   string name = 2;
   string description = 3;
@@ -10,17 +8,17 @@ message ProductMessage {
   float price = 5;
   float discount = 6;
   float weight = 7;
-  CategoryMessage category = 8;
-  repeated string tags = 9;
   int32 quantity = 10;
+  string categoryId = 8;
+  repeated string tags = 9;
 }
 
 message AddProductRequest {
-  ProductMessage product = 1;
+  Product product = 1;
 }
 
 message AddProductResponse {
-  ProductMessage product = 1;
+  string id = 1;
 }
 
 message GetProductByIdRequest {
@@ -28,7 +26,7 @@ message GetProductByIdRequest {
 }
 
 message GetProductByIdResponse {
-  ProductMessage product = 1;
+  Product product = 1;
 }
 
 message GetProductsFromCategoryRequest {
@@ -38,15 +36,15 @@ message GetProductsFromCategoryRequest {
 }
 
 message GetProductsFromCategoryResponse {
-  repeated ProductMessage product = 1;
+  repeated Product product = 1;
 }
 
 message UpdateProductRequest {
-  ProductMessage product = 1;
+  Product product = 1;
 }
 
 message UpdateProductResponse {
-  ProductMessage product = 1;
+  Product product = 1;
 }
 
 message RemoveProductRequest {

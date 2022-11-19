@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-message CategoryMessage{
+message Category{
   string id = 1;
   string name = 2;
   string description = 3;
@@ -8,11 +8,11 @@ message CategoryMessage{
 }
 
 message AddCategoryRequest {
-  CategoryMessage category = 1;
+  Category category = 1;
 }
 
 message AddCategoryResponse {
-  CategoryMessage category = 1;
+  Category category = 1;
 }
 
 message GetCategoryByIdRequest {
@@ -20,7 +20,7 @@ message GetCategoryByIdRequest {
 }
 
 message GetCategoryByIdResponse {
-  CategoryMessage category = 1;
+  Category category = 1;
 }
 
 message GetCategoriesRequest {
@@ -29,15 +29,15 @@ message GetCategoriesRequest {
 }
 
 message GetCategoriesResponse {
-  repeated CategoryMessage category = 1;
+  repeated Category category = 1;
 }
 
 message UpdateCategoryRequest {
-  CategoryMessage category = 1;
+  Category category = 1;
 }
 
 message UpdateCategoryResponse {
-  CategoryMessage category = 1;
+  Category category = 1;
 }
 
 message RemoveCategoryRequest {
