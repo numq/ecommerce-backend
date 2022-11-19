@@ -48,7 +48,7 @@ message RemoveCategoryResponse {
   string id = 1;
 }
 
-service CategoryApi {
+service CategoryService {
   rpc addCategory(AddCategoryRequest) returns (AddCategoryResponse);
   rpc getCategoryById(GetCategoryByIdRequest) returns (GetCategoryByIdResponse);
   rpc getCategories(GetCategoriesRequest) returns (GetCategoriesResponse);

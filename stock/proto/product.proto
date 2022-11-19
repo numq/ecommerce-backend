@@ -55,7 +55,7 @@ message RemoveProductResponse {
   string id = 1;
 }
 
-service ProductApi {
+service ProductService {
   rpc addProduct(AddProductRequest) returns (AddProductResponse);
   rpc getProductById(GetProductByIdRequest) returns (GetProductByIdResponse);
   rpc getProductsFromCategory(GetProductsFromCategoryRequest) returns (GetProductsFromCategoryResponse);
