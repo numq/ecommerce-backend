@@ -2,7 +2,7 @@ export type Product = {
     id: string;
     name: string;
     description: string;
-    imageBytes: Uint8Array[];
+    imageBytes: Uint8Array;
     price: number;
     discount: number;
     weight: number;
