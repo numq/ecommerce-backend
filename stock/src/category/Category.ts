@@ -3,4 +3,6 @@ export type Category = {
     name: string;
     description: string;
     imageBytes: Uint8Array;
+    createdAt: number;
+    updatedAt: number;
 };

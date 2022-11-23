@@ -5,6 +5,8 @@ message Category{
   string name = 2;
   string description = 3;
   bytes imageBytes = 4;
+  uint64 updatedAt = 5;
+  uint64 createdAt = 6;
 }
 
 message AddCategoryRequest {

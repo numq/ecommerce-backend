@@ -26,14 +26,16 @@ export class CategoryRepositoryImpl implements CategoryRepository {
 
     addCategory(category: Category): TaskEither<Error, string> {
         return pipe(
-            TE.tryCatch(() => Promise.resolve(new ObjectId()), () => DatabaseError.id),
-            TE.chain((id: ObjectId) =>
+            TE.tryCatch(() => Promise.resolve<[ObjectId, number]>([new ObjectId(), new Date().getTime()]), () => DatabaseError.id),
+            TE.chain(([id, timestamp]: [ObjectId, number]) =>
                 TE.fromTask(() => this.collection.insertOne({
                     _id: id,
                     id: id.toHexString(),
                     name: category.name,
                     description: category.description,
-                    imageBytes: category.imageBytes
+                    imageBytes: category.imageBytes,
+                    createdAt: timestamp,
+                    updatedAt: timestamp
                 }))),
             TE.mapLeft(e => e ? e : DatabaseError.insert),
             TE.map(_ => _.insertedId.toHexString())
@@ -61,7 +63,8 @@ export class CategoryRepositoryImpl implements CategoryRepository {
                 $set: {
                     name: category.name,
                     description: category.description,
-                    imageBytes: category.imageBytes
+                    imageBytes: category.imageBytes,
+                    updatedAt: new Date().getTime()
                 }
             })),
             TE.mapLeft(() => DatabaseError.update),
