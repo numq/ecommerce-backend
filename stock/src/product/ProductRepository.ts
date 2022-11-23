@@ -1,24 +1,22 @@
-import {Either} from "fp-ts/Either";
-import {Exception} from "../exception/Exception";
 import {Product} from "./Product";
 import {inject, injectable} from "inversify";
-import {Collection} from "mongodb";
+import {Collection, ObjectId} from "mongodb";
 import {Types} from "../di/types";
-import {wrap} from "../wrapper/Promise";
-import {either} from "fp-ts";
+import {taskEither as TE} from "fp-ts";
 import {pipe} from "fp-ts/function";
-import {ProductException} from "./ProductException";
+import {TaskEither} from "fp-ts/TaskEither";
+import {DatabaseError} from "../database/DatabaseError";
 
 export interface ProductRepository {
-    addProduct(product: Product): Either<Exception, string>
+    addProduct(product: Product): TaskEither<Error, string>
 
-    getProductById(id: string): Either<Exception, Product>
+    getProductById(id: string): TaskEither<Error, Product>
 
-    getProductsFromCategory(categoryId: string, skip: number, limit: number): Either<Exception, Product[]>
+    getProductsFromCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]>
 
-    updateProduct(product: Product): Either<Exception, Product>
+    updateProduct(product: Product): TaskEither<Error, Product>
 
-    removeProduct(id: string): Either<Exception, string>
+    removeProduct(id: string): TaskEither<Error, string>
 }
 
 @injectable()
@@ -26,46 +24,70 @@ export class ProductRepositoryImpl implements ProductRepository {
     constructor(@inject(Types.product.collection) private readonly collection: Collection<Product>) {
     }
 
-    addProduct(product: Product): Either<Exception, string> {
+    addProduct(product: Product): TaskEither<Error, string> {
         return pipe(
-            wrap(this.collection.insertOne(product), ProductException.insert),
-            either.map(x => x.insertedId.toHexString())
+            TE.tryCatch(() => Promise.resolve(new ObjectId()), () => DatabaseError.id),
+            TE.chain((id: ObjectId) =>
+                TE.fromTask(() => this.collection.insertOne({
+                    _id: id,
+                    id: id.toHexString(),
+                    name: product.name,
+                    description: product.description,
+                    imageBytes: product.imageBytes,
+                    price: product.price,
+                    discount: product.discount,
+                    weight: product.weight,
+                    quantity: product.quantity,
+                    categoryId: product.categoryId,
+                    tags: product.tags
+                }))),
+            TE.mapLeft(e => e ? e : DatabaseError.insert),
+            TE.map(_ => _.insertedId.toHexString())
         );
     }
 
-    getProductById(id: string): Either<Exception, Product> {
+    getProductById(id: string): TaskEither<Error, Product> {
         return pipe(
-            wrap(this.collection.findOne({id: id}), ProductException.getById),
-            either.chain(either.fromNullable(ProductException.getById))
+            TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
+            TE.mapLeft(() => DatabaseError.findOne),
+            TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
 
-    getProductsFromCategory(categoryId: string, skip: number, limit: number): Either<Exception, Product[]> {
-        return wrap(this.collection.find({categoryId: categoryId}).toArray(), ProductException.getFromCategory);
-    }
-
-    updateProduct(product: Product): Either<Exception, Product> {
+    getProductsFromCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]> {
         return pipe(
-            wrap(this.collection.updateOne({id: product.id}, {
-                name: product.name,
-                description: product.description,
-                imageBytes: product.imageBytes,
-                price: product.price,
-                discount: product.discount,
-                weight: product.weight,
-                quantity: product.quantity,
-                categoryId: product.categoryId,
-                tags: product.tags
-            }), ProductException.update),
-            either.chain(_ => wrap(this.collection.findOne({id: product.id}), ProductException.getById)),
-            either.chain(either.fromNullable(ProductException.getById))
+            TE.fromTask(() => this.collection.find({categoryId: categoryId}).toArray()),
+            TE.mapLeft(() => DatabaseError.find)
         );
     }
 
-    removeProduct(id: string): Either<Exception, string> {
+    updateProduct(product: Product): TaskEither<Error, Product> {
         return pipe(
-            wrap(this.collection.deleteOne({id: id}), ProductException.remove),
-            either.map(_ => id)
+            TE.fromTask(() => this.collection.updateOne({_id: ObjectId.createFromHexString(product.id)}, {
+                $set: {
+                    name: product.name,
+                    description: product.description,
+                    imageBytes: product.imageBytes,
+                    price: product.price,
+                    discount: product.discount,
+                    weight: product.weight,
+                    quantity: product.quantity,
+                    categoryId: product.categoryId,
+                    tags: product.tags
+                }
+            })),
+            TE.mapLeft(() => DatabaseError.update),
+            TE.chain(() =>
+                TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(product.id)}))),
+            TE.chain(TE.fromNullable(DatabaseError.findOne))
+        );
+    }
+
+    removeProduct(id: string): TaskEither<Error, string> {
+        return pipe(
+            TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
+            TE.mapLeft(() => DatabaseError.deleteOne),
+            TE.map(() => id)
         );
     }
 }

@@ -3,8 +3,7 @@ import {UseCase} from "../interactor/UseCase";
 import {Product} from "./Product";
 import {Types} from "../di/types";
 import {ProductRepository} from "./ProductRepository";
-import {Either} from "fp-ts/Either";
-import {Exception} from "../exception/Exception";
+import {TaskEither} from "fp-ts/TaskEither";
 
 @injectable()
 export class UpdateProduct extends UseCase<Product, Product> {
@@ -12,7 +11,7 @@ export class UpdateProduct extends UseCase<Product, Product> {
         super();
     }
 
-    execute(arg: Product): Either<Exception, Product> {
+    execute(arg: Product): TaskEither<Error, Product> {
         return this.repository.updateProduct(arg);
     }
 }

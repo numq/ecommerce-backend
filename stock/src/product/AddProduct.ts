@@ -2,9 +2,8 @@ import {inject, injectable} from "inversify";
 import {ProductRepository} from "./ProductRepository";
 import {UseCase} from "../interactor/UseCase";
 import {Product} from "./Product";
-import {Either} from "fp-ts/lib/Either";
 import {Types} from "../di/types";
-import {Exception} from "../exception/Exception";
+import {TaskEither} from "fp-ts/TaskEither";
 
 @injectable()
 export class AddProduct extends UseCase<Product, string> {
@@ -12,7 +11,7 @@ export class AddProduct extends UseCase<Product, string> {
         super();
     }
 
-    execute(arg: Product): Either<Exception, string> {
+    execute(arg: Product): TaskEither<Error, string> {
         return this.repository.addProduct(arg);
     }
 }
