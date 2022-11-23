@@ -1,10 +1,9 @@
 import {inject, injectable} from "inversify";
 import {UseCase} from "../interactor/UseCase";
-import {Exception} from "../exception/Exception";
 import {Category} from "./Category";
-import {Either} from "fp-ts/Either";
 import {Types} from "../di/types";
 import {CategoryRepository} from "./CategoryRepository";
+import {TaskEither} from "fp-ts/TaskEither";
 
 @injectable()
 export class AddCategory extends UseCase<Category, string> {
@@ -12,7 +11,7 @@ export class AddCategory extends UseCase<Category, string> {
         super();
     }
 
-    execute(arg: Category): Either<Exception, string> {
+    execute(arg: Category): TaskEither<Error, string> {
         return this.repository.addCategory(arg);
     }
 }

@@ -1,24 +1,22 @@
-import {Either} from "fp-ts/Either";
-import {Exception} from "../exception/Exception";
 import {Category} from "./Category";
 import {inject, injectable} from "inversify";
 import {Types} from "../di/types";
-import {Collection} from "mongodb";
-import {wrap} from "../wrapper/Promise";
-import {either} from "fp-ts";
+import {Collection, ObjectId} from "mongodb";
+import {taskEither as TE} from "fp-ts";
 import {pipe} from "fp-ts/function";
-import {CategoryException} from "./CategoryException";
+import {TaskEither} from "fp-ts/TaskEither";
+import {DatabaseError} from "../database/DatabaseError";
 
 export interface CategoryRepository {
-    addCategory(category: Category): Either<Exception, string>
+    addCategory(category: Category): TaskEither<Error, string>
 
-    getCategoryById(id: string): Either<Exception, Category>
+    getCategoryById(id: string): TaskEither<Error, Category>
 
-    getCategories(): Either<Exception, Category[]>
+    getCategories(): TaskEither<Error, Category[]>
 
-    updateCategory(category: Category): Either<Exception, Category>
+    updateCategory(category: Category): TaskEither<Error, Category>
 
-    removeCategory(id: string): Either<Exception, string>
+    removeCategory(id: string): TaskEither<Error, string>
 }
 
 @injectable()
@@ -26,40 +24,58 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     constructor(@inject(Types.category.collection) private readonly collection: Collection<Category>) {
     }
 
-    addCategory(category: Category): Either<Exception, string> {
+    addCategory(category: Category): TaskEither<Error, string> {
         return pipe(
-            wrap(this.collection.insertOne(category), CategoryException.insert),
-            either.map(x => x.insertedId.toHexString())
+            TE.tryCatch(() => Promise.resolve(new ObjectId()), () => DatabaseError.id),
+            TE.chain((id: ObjectId) =>
+                TE.fromTask(() => this.collection.insertOne({
+                    _id: id,
+                    id: id.toHexString(),
+                    name: category.name,
+                    description: category.description,
+                    imageBytes: category.imageBytes
+                }))),
+            TE.mapLeft(e => e ? e : DatabaseError.insert),
+            TE.map(_ => _.insertedId.toHexString())
         );
     }
 
-    getCategoryById(id: string): Either<Exception, Category> {
+    getCategoryById(id: string): TaskEither<Error, Category> {
         return pipe(
-            wrap(this.collection.findOne({id: id}), CategoryException.getById),
-            either.chain(either.fromNullable(CategoryException.getById))
+            TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
+            TE.mapLeft(() => DatabaseError.findOne),
+            TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
 
-    getCategories(): Either<Exception, Category[]> {
-        return wrap(this.collection.find().toArray(), CategoryException.get);
-    }
-
-    updateCategory(category: Category): Either<Exception, Category> {
+    getCategories(): TaskEither<Error, Category[]> {
         return pipe(
-            wrap(this.collection.updateOne({id: category.id}, {
-                name: category.name,
-                description: category.description,
-                imageBytes: category.imageBytes
-            }), CategoryException.update),
-            either.chain(_ => wrap(this.collection.findOne({id: category.id}), CategoryException.getById)),
-            either.chain(either.fromNullable(CategoryException.getById))
+            TE.fromTask(() => this.collection.find().toArray()),
+            TE.mapLeft(() => DatabaseError.find)
         );
     }
 
-    removeCategory(id: string): Either<Exception, string> {
+    updateCategory(category: Category): TaskEither<Error, Category> {
         return pipe(
-            wrap(this.collection.deleteOne({id: id}), CategoryException.remove),
-            either.map(_ => id)
+            TE.fromTask(() => this.collection.updateOne({_id: ObjectId.createFromHexString(category.id)}, {
+                $set: {
+                    name: category.name,
+                    description: category.description,
+                    imageBytes: category.imageBytes
+                }
+            })),
+            TE.mapLeft(() => DatabaseError.update),
+            TE.chain(() =>
+                TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(category.id)}))),
+            TE.chain(TE.fromNullable(DatabaseError.findOne))
+        );
+    }
+
+    removeCategory(id: string): TaskEither<Error, string> {
+        return pipe(
+            TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
+            TE.mapLeft(() => DatabaseError.deleteOne),
+            TE.map(() => id)
         );
     }
 

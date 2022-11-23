@@ -3,8 +3,7 @@ import {UseCase} from "../interactor/UseCase";
 import {Category} from "./Category";
 import {Types} from "../di/types";
 import {CategoryRepository} from "./CategoryRepository";
-import {Either} from "fp-ts/Either";
-import {Exception} from "../exception/Exception";
+import {TaskEither} from "fp-ts/TaskEither";
 
 @injectable()
 export class GetCategoryById extends UseCase<string, Category> {
@@ -12,7 +11,7 @@ export class GetCategoryById extends UseCase<string, Category> {
         super();
     }
 
-    execute(arg: string): Either<Exception, Category> {
+    execute(arg: string): TaskEither<Error, Category> {
         return this.repository.getCategoryById(arg);
     }
 }
