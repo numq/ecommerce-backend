@@ -1,6 +1,5 @@
-import {Either} from "fp-ts/Either";
-import {Exception} from "../exception/Exception";
+import {TaskEither} from "fp-ts/TaskEither";
 
 export abstract class UseCase<T, R> {
-    abstract execute(arg: T): Either<Exception, R>
+    abstract execute(arg: T): TaskEither<Error, R>
 }
