@@ -36,7 +36,7 @@ message GetProductsFromCategoryRequest {
 }
 
 message GetProductsFromCategoryResponse {
-  repeated Product product = 1;
+  repeated Product products = 1;
 }
 
 message UpdateProductRequest {

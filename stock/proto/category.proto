@@ -12,7 +12,7 @@ message AddCategoryRequest {
 }
 
 message AddCategoryResponse {
-  Category category = 1;
+  string id = 1;
 }
 
 message GetCategoryByIdRequest {
@@ -24,12 +24,10 @@ message GetCategoryByIdResponse {
 }
 
 message GetCategoriesRequest {
-  int32 skip = 1;
-  int32 limit = 2;
 }
 
 message GetCategoriesResponse {
-  repeated Category category = 1;
+  repeated Category categories = 1;
 }
 
 message UpdateCategoryRequest {
