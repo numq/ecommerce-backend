@@ -10,7 +10,7 @@ import {UpdateProduct} from "../product/UpdateProduct";
 import {RemoveProduct} from "../product/RemoveProduct";
 import {GetProductById} from "../product/GetProductById";
 import {GetProductsFromCategory} from "../product/GetProductsFromCategory";
-import {Product, ProductServiceServer} from "../generated/product";
+import {ProductServiceServer} from "../generated/product";
 import {Collection} from "mongodb";
 import {Database} from "../database/Database";
 import {AddCategory} from "../category/AddCategory";
@@ -21,6 +21,7 @@ import {RemoveCategory} from "../category/RemoveCategory";
 import {CategoryServiceServer} from "../generated/category";
 import {CategoryRepository, CategoryRepositoryImpl} from "../category/CategoryRepository";
 import {CategoryService} from "../category/CategoryService";
+import {Product} from "../product/Product";
 import {Category} from "../category/Category";
 
 export namespace Module {
@@ -36,7 +37,7 @@ export namespace Module {
 
     const category = new ContainerModule(bind => {
         bind<Collection<Category>>(Types.category.collection).toDynamicValue(() => {
-            return container.get<Database>(Types.app.database).collection<Category>(container.get<Config>(Types.app.config).COLLECTION_CATEGORIES)!;
+            return container.get<Database>(Types.app.database).collection<Category>(container.get<Config>(Types.app.config).COLLECTION_CATEGORIES!)!
         }).inSingletonScope();
         bind<CategoryRepository>(Types.category.repository).to(CategoryRepositoryImpl).inSingletonScope();
         bind<CategoryServiceServer>(Types.category.service).to(CategoryService).inSingletonScope();
@@ -48,8 +49,8 @@ export namespace Module {
     });
 
     const product = new ContainerModule(bind => {
-        bind<Collection<Product>>(Types.product.collection).toDynamicValue(() => {
-            return container.get<Database>(Types.app.database).collection<Product>(container.get<Config>(Types.app.config).COLLECTION_PRODUCTS)!;
+        bind<Collection<Product> | null>(Types.product.collection).toDynamicValue(() => {
+            return container.get<Database>(Types.app.database).collection<Product>(container.get<Config>(Types.app.config).COLLECTION_PRODUCTS!)!;
         }).inSingletonScope();
         bind<ProductServiceServer>(Types.product.service).to(ProductService).inSingletonScope();
         bind<ProductRepository>(Types.product.repository).to(ProductRepositoryImpl).inSingletonScope();
