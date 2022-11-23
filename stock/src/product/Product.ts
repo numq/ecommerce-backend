@@ -9,4 +9,6 @@ export type Product = {
     quantity: number;
     categoryId: string;
     tags: string[];
+    createdAt: number;
+    updatedAt: number;
 };

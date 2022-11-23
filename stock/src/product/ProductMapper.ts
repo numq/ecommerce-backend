@@ -13,7 +13,9 @@ export namespace ProductMapper {
         weight: entity.weight,
         quantity: entity.quantity,
         categoryId: entity.categoryId,
-        tags: entity.tags
+        tags: entity.tags,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt
     });
     export const messageToEntity = (message: ProductMessage): Product => ({
         id: message.id,
@@ -25,6 +27,8 @@ export namespace ProductMapper {
         weight: message.weight,
         quantity: message.quantity,
         categoryId: message.categoryId,
-        tags: message.tags
+        tags: message.tags,
+        createdAt: message.createdAt,
+        updatedAt: message.updatedAt
     });
 }

@@ -26,8 +26,8 @@ export class ProductRepositoryImpl implements ProductRepository {
 
     addProduct(product: Product): TaskEither<Error, string> {
         return pipe(
-            TE.tryCatch(() => Promise.resolve(new ObjectId()), () => DatabaseError.id),
-            TE.chain((id: ObjectId) =>
+            TE.tryCatch(() => Promise.resolve<[ObjectId, number]>([new ObjectId(), new Date().getTime()]), () => DatabaseError.id),
+            TE.chain(([id, timestamp]: [ObjectId, number]) =>
                 TE.fromTask(() => this.collection.insertOne({
                     _id: id,
                     id: id.toHexString(),
@@ -39,7 +39,9 @@ export class ProductRepositoryImpl implements ProductRepository {
                     weight: product.weight,
                     quantity: product.quantity,
                     categoryId: product.categoryId,
-                    tags: product.tags
+                    tags: product.tags,
+                    createdAt: timestamp,
+                    updatedAt: timestamp
                 }))),
             TE.mapLeft(e => e ? e : DatabaseError.insert),
             TE.map(_ => _.insertedId.toHexString())
@@ -73,7 +75,8 @@ export class ProductRepositoryImpl implements ProductRepository {
                     weight: product.weight,
                     quantity: product.quantity,
                     categoryId: product.categoryId,
-                    tags: product.tags
+                    tags: product.tags,
+                    updatedAt: new Date().getTime()
                 }
             })),
             TE.mapLeft(() => DatabaseError.update),
