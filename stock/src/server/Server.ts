@@ -12,7 +12,7 @@ export class Server {
     ) {
     }
 
-    launch(bind: (server: GrpcServer) => void) {
+    async launch(bind: (server: GrpcServer) => void) {
         const server: GrpcServer = new GrpcServer();
         bind(server);
         server.bindAsync(this.config.SERVER_URL, ServerCredentials.createInsecure(), (error, port) => {

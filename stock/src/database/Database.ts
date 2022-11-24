@@ -10,7 +10,7 @@ export class Database {
     constructor(@inject(Types.app.config) private readonly config: Config) {
     }
 
-    open = async () => await new MongoClient(this.config.DATABASE_URL).connect().then(client => {
+    open = async () => new MongoClient(this.config.DATABASE_URL).connect().then(client => {
         this.client = client;
         console.log(`Connected to database: ${this.config.DATABASE_URL}`);
     }).catch(console.error);
