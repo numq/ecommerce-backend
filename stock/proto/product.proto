@@ -11,8 +11,8 @@ message Product {
   int32 quantity = 8;
   string categoryId = 9;
   repeated string tags = 10;
-  uint64 updatedAt = 11;
-  uint64 createdAt = 12;
+  uint64 createdAt = 11;
+  uint64 updatedAt = 12;
 }
 
 message AddProductRequest {
