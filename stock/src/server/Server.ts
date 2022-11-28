@@ -2,14 +2,10 @@ import {inject, injectable} from "inversify";
 import {Types} from "../di/types";
 import {Config} from "../config/Config";
 import {Server as GrpcServer, ServerCredentials} from "@grpc/grpc-js";
-import {ProductServiceServer} from "../generated/product";
 
 @injectable()
 export class Server {
-    constructor(
-        @inject(Types.app.config) private readonly config: Config,
-        @inject(Types.product.service) private readonly productService: ProductServiceServer
-    ) {
+    constructor(@inject(Types.app.config) private readonly config: Config) {
     }
 
     async launch(bind: (server: GrpcServer) => void) {

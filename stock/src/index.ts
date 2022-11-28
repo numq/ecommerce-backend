@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 import {ProductServiceServer, ProductServiceService} from "./generated/product";
 import {CategoryServiceServer, CategoryServiceService} from "./generated/category";
 import {Database} from "./database/Database";
-import {App} from "./app/App";
+import {createApplication} from "./app";
 
 const initialize = async () => {
     dotenv.config();
@@ -20,4 +20,4 @@ const execute = async () => {
     });
 };
 
-App.create(initialize, execute);
+createApplication(initialize, execute);

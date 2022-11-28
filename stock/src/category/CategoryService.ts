@@ -21,7 +21,7 @@ import {GetCategories} from "./GetCategories";
 import {UpdateCategory} from "./UpdateCategory";
 import {RemoveCategory} from "./RemoveCategory";
 import {CategoryMapper} from "./CategoryMapper";
-import {response} from "../response/response";
+import {response} from "../response";
 
 @injectable()
 export class CategoryService implements CategoryServiceServer {

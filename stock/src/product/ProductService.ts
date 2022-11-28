@@ -20,7 +20,7 @@ import {GetProductById} from "./GetProductById";
 import {GetProductsFromCategory} from "./GetProductsFromCategory";
 import {UpdateProduct} from "./UpdateProduct";
 import {RemoveProduct} from "./RemoveProduct";
-import {response} from "../response/response";
+import {response} from "../response";
 import {ProductMapper} from "./ProductMapper";
 
 @injectable()
