@@ -39,8 +39,8 @@ export namespace Module {
         bind<Collection<Category>>(Types.category.collection).toDynamicValue(() => {
             return container.get<Database>(Types.app.database).collection<Category>(container.get<Config>(Types.app.config).COLLECTION_CATEGORIES!)!
         }).inSingletonScope();
-        bind<CategoryRepository>(Types.category.repository).to(CategoryRepositoryImpl).inSingletonScope();
         bind<CategoryServiceServer>(Types.category.service).to(CategoryService).inSingletonScope();
+        bind<CategoryRepository>(Types.category.repository).to(CategoryRepositoryImpl).inSingletonScope();
         bind<AddCategory>(Types.category.addCategory).to(AddCategory).inTransientScope();
         bind<GetCategoryById>(Types.category.getCategoryById).to(GetCategoryById).inTransientScope();
         bind<GetCategories>(Types.category.getCategories).to(GetCategories).inTransientScope();
