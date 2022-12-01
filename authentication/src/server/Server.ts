@@ -6,8 +6,7 @@ import {Config} from "../config/Config";
 @injectable()
 export class Server {
     constructor(
-        @inject(Types.app.config) private readonly config: Config,
-        @inject(Types.account.service) private readonly accountService: AccountServiceServer
+        @inject(Types.app.config) private readonly config: Config
     ) {
     }
 

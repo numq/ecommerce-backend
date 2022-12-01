@@ -8,7 +8,14 @@ export namespace Types {
         collection: Symbol.for("accountCollection"),
         repository: Symbol.for("accountRepository"),
         service: Symbol.for("accountService"),
-        accessAccount: Symbol.for("accessAccount"),
-        verifyAccount: Symbol.for("verifyAccount")
+        authenticate: Symbol.for("authenticate")
+    };
+    export const confirmation = {
+        service: Symbol.for("confirmationService")
+    };
+    export const token = {
+        service: Symbol.for("tokenService"),
+        repository: Symbol.for("tokenRepository"),
+        verifyToken: Symbol.for("verifyToken")
     };
 }
