@@ -6,11 +6,11 @@ import {Server} from "../server/Server";
 import {Cache} from "../cache/Cache";
 import {CartService} from "../cart/CartService";
 import {CartRepository, CartRepositoryImpl} from "../cart/CartRepository";
-import {GetItems} from "../cart/GetItems";
-import {AddItem} from "../cart/AddItem";
-import {RemoveItem} from "../cart/RemoveItem";
+import {GetCart} from "../cart/GetCart";
+import {IncreaseItemQuantity} from "../cart/IncreaseItemQuantity";
 import {ClearCart} from "../cart/ClearCart";
 import {CartServiceServer} from "../generated/cart";
+import {DecreaseItemQuantity} from "../cart/DecreaseItemQuantity";
 
 export namespace Module {
 
@@ -26,9 +26,9 @@ export namespace Module {
     const cart = new ContainerModule(bind => {
         bind<CartServiceServer>(Types.cart.service).to(CartService).inSingletonScope();
         bind<CartRepository>(Types.cart.repository).to(CartRepositoryImpl).inSingletonScope();
-        bind<GetItems>(Types.cart.getItemsFromCart).to(GetItems).inTransientScope();
-        bind<AddItem>(Types.cart.addItemToCart).to(AddItem).inTransientScope();
-        bind<RemoveItem>(Types.cart.removeItemFromCart).to(RemoveItem).inTransientScope();
+        bind<GetCart>(Types.cart.getCart).to(GetCart).inTransientScope();
+        bind<IncreaseItemQuantity>(Types.cart.increaseItemQuantity).to(IncreaseItemQuantity).inTransientScope();
+        bind<DecreaseItemQuantity>(Types.cart.decreaseItemQuantity).to(DecreaseItemQuantity).inTransientScope();
         bind<ClearCart>(Types.cart.clearCart).to(ClearCart).inTransientScope();
     });
 }

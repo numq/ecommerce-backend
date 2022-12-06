@@ -7,10 +7,9 @@ export namespace Types {
     export const cart = {
         repository: Symbol.for("cartRepository"),
         service: Symbol.for("cartService"),
-        getItems: Symbol.for("getItems"),
-        addItem: Symbol.for("addItem"),
-        updateItem: Symbol.for("updateItem"),
-        removeItem: Symbol.for("removeItem"),
-        clearCart: Symbol.for("clearCart")
+        getCart: Symbol.for("getCart"),
+        clearCart: Symbol.for("clearCart"),
+        increaseItemQuantity: Symbol.for("increaseItemQuantity"),
+        decreaseItemQuantity: Symbol.for("decreaseItemQuantity")
     };
 }
