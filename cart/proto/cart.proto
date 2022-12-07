@@ -37,7 +37,7 @@ message DecreaseItemQuantityRequest{
 }
 
 message DecreaseItemQuantityResponse{
-  Item item = 1;
+  optional Item item = 1;
 }
 
 service CartService{

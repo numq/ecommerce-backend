@@ -14,6 +14,8 @@ export interface CartRepository {
 
     getItemById(cartId: string, itemId: string): TaskEither<Error, Item>
 
+    getItemByIdOrNull(cartId: string, itemId: string): TaskEither<Error, Item | null>
+
     createItem(cartId: string, itemId: string): TaskEither<Error, number>
 
     updateItem(cartId: string, item: Item): TaskEither<Error, number>
@@ -39,10 +41,27 @@ export class CartRepositoryImpl implements CartRepository {
                 id: itemId,
                 quantity: quantity,
                 addedAt: addedAt
-            })),
-            TE.chain(TE.fromNullable(CacheError.get))
+            }))
         );
     }
+
+    getItemByIdOrNull(cartId: string, itemId: string): TaskEither<Error, Item | null> {
+        return pipe(
+            this.cache.client,
+            TE.fromNullable(CacheError.client),
+            TE.chain(client => TE.tryCatch(() => client.hGet(cartId, itemId), () => CacheError.get)),
+            TE.chain(_ => _ ? pipe(
+                TE.of(_),
+                TE.map(JSON.parse),
+                TE.map(({quantity, addedAt}) => ({
+                    id: itemId,
+                    quantity: quantity,
+                    addedAt: addedAt
+                }))
+            ) : TE.right(null))
+        );
+    }
+
 
     removeItemById(cartId: string, itemId: string): TaskEither<Error, number> {
         return pipe(
@@ -57,8 +76,9 @@ export class CartRepositoryImpl implements CartRepository {
             this.cache.client,
             TE.fromNullable(CacheError.client),
             TE.chain(client => TE.tryCatch(() => client.hSet(cartId, itemId, JSON.stringify({
+                id: itemId,
                 quantity: 1,
-                addedAt: new Date().toTimeString()
+                addedAt: new Date().getTime()
             })), () => CacheError.create))
         );
     }
@@ -68,6 +88,7 @@ export class CartRepositoryImpl implements CartRepository {
             this.cache.client,
             TE.fromNullable(CacheError.client),
             TE.chain(client => TE.tryCatch(() => client.hSet(cartId, item.id, JSON.stringify({
+                id: item.id,
                 quantity: item.quantity,
                 addedAt: item.addedAt
             })), () => CacheError.update))

@@ -16,13 +16,18 @@ export class IncreaseItemQuantity extends UseCase<[string, string], Item> {
     execute(arg: [string, string]): TaskEither<Error, Item> {
         const [cartId, itemId] = arg;
         return pipe(
-            this.cartRepository.getItemById(cartId, itemId),
-            TE.chain(item => this.cartRepository.updateItem(cartId, ({
-                id: item.id,
-                quantity: item.quantity + 1,
-                addedAt: item.addedAt
-            }))),
-            TE.orElse(() => this.cartRepository.createItem(cartId, itemId)),
+            this.cartRepository.getItemByIdOrNull(cartId, itemId),
+            TE.chain(item => {
+                if (item != null) {
+                    return this.cartRepository.updateItem(cartId, ({
+                        id: item.id,
+                        quantity: item.quantity + 1,
+                        addedAt: item.addedAt
+                    }));
+                } else {
+                    return this.cartRepository.createItem(cartId, itemId);
+                }
+            }),
             TE.chain(() => this.cartRepository.getItemById(cartId, itemId))
         );
     }
