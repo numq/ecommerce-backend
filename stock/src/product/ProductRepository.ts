@@ -51,7 +51,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     getProductById(id: string): TaskEither<Error, Product> {
         return pipe(
             TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(() => DatabaseError.findOne),
+            TE.mapLeft(e => e ? e : DatabaseError.findOne),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
@@ -59,7 +59,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     getProductsFromCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]> {
         return pipe(
             TE.fromTask(() => this.collection.find({categoryId: categoryId}).toArray()),
-            TE.mapLeft(() => DatabaseError.find)
+            TE.mapLeft(e => e ? e : DatabaseError.find)
         );
     }
 
@@ -79,7 +79,7 @@ export class ProductRepositoryImpl implements ProductRepository {
                     updatedAt: new Date().getTime()
                 }
             })),
-            TE.mapLeft(() => DatabaseError.update),
+            TE.mapLeft(e => e ? e : DatabaseError.update),
             TE.chain(() =>
                 TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(product.id)}))),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
@@ -89,7 +89,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     removeProduct(id: string): TaskEither<Error, string> {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(() => DatabaseError.deleteOne),
+            TE.mapLeft(e => e ? e : DatabaseError.deleteOne),
             TE.map(() => id)
         );
     }

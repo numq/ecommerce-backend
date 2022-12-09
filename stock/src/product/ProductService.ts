@@ -46,23 +46,17 @@ export class ProductService implements ProductServiceServer {
 
     getProductById(call: ServerUnaryCall<GetProductByIdRequest, GetProductByIdResponse>, callback: sendUnaryData<GetProductByIdResponse>): void {
         const {id} = call.request;
-        if (id) {
-            response(this.getProductByIdUseCase.execute(id), callback, value => ({product: ProductMapper.entityToMessage(value)}));
-        }
+        response(this.getProductByIdUseCase.execute(id), callback, value => ({product: ProductMapper.entityToMessage(value)}));
     }
 
     getProductsFromCategory(call: ServerUnaryCall<GetProductsFromCategoryRequest, GetProductsFromCategoryResponse>, callback: sendUnaryData<GetProductsFromCategoryResponse>): void {
         const {categoryId, skip, limit} = call.request;
-        if (categoryId && skip && limit) {
-            response(this.getProductsFromCategoryUseCase.execute([categoryId, skip, limit]), callback, value => ({products: value.map(ProductMapper.entityToMessage)}));
-        }
+        response(this.getProductsFromCategoryUseCase.execute([categoryId, skip, limit]), callback, value => ({products: value.map(ProductMapper.entityToMessage)}));
     }
 
     removeProduct(call: ServerUnaryCall<RemoveProductRequest, RemoveProductResponse>, callback: sendUnaryData<RemoveProductResponse>): void {
         const {id} = call.request;
-        if (id) {
-            response(this.removeProductUseCase.execute(id), callback, value => ({id: value}));
-        }
+        response(this.removeProductUseCase.execute(id), callback, value => ({id: value}));
     }
 
     updateProduct(call: ServerUnaryCall<UpdateProductRequest, UpdateProductResponse>, callback: sendUnaryData<UpdateProductResponse>): void {

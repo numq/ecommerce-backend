@@ -45,23 +45,17 @@ export class CategoryService implements CategoryServiceServer {
     }
 
     getCategories(call: ServerUnaryCall<GetCategoriesRequest, GetCategoriesResponse>, callback: sendUnaryData<GetCategoriesResponse>): void {
-        if (call.request) {
-            response(this.getCategoriesUseCase.execute(), callback, value => ({categories: value.map(CategoryMapper.entityToMessage)}));
-        }
+        response(this.getCategoriesUseCase.execute(), callback, value => ({categories: value.map(CategoryMapper.entityToMessage)}));
     }
 
     getCategoryById(call: ServerUnaryCall<GetCategoryByIdRequest, GetCategoryByIdResponse>, callback: sendUnaryData<GetCategoryByIdResponse>): void {
         const {id} = call.request;
-        if (id) {
-            response(this.getCategoryByIdUseCase.execute(id), callback, value => ({category: CategoryMapper.entityToMessage(value)}));
-        }
+        response(this.getCategoryByIdUseCase.execute(id), callback, value => ({category: CategoryMapper.entityToMessage(value)}));
     }
 
     removeCategory(call: ServerUnaryCall<RemoveCategoryRequest, RemoveCategoryResponse>, callback: sendUnaryData<RemoveCategoryResponse>): void {
         const {id} = call.request;
-        if (id) {
-            response(this.removeCategoryUseCase.execute(id), callback, value => ({id: value}));
-        }
+        response(this.removeCategoryUseCase.execute(id), callback, value => ({id: value}));
     }
 
     updateCategory(call: ServerUnaryCall<UpdateCategoryRequest, UpdateCategoryResponse>, callback: sendUnaryData<UpdateCategoryResponse>): void {
