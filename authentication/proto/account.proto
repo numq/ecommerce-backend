@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+enum CredentialsType {
+  PHONE_NUMBER = 0;
+}
+
+message SendCredentialsRequest{
+  string credentials = 1;
+  CredentialsType credentialsType = 2;
+}
+
+message SendCredentialsResponse{
+  uint64 retryTimeout = 1;
+}
+
+message VerifyConfirmationCodeRequest{
+  string confirmationCode = 1;
+}
+
+message VerifyConfirmationCodeResponse{
+  string accessToken = 1;
+  optional string refreshToken = 2;
+}
+
+service AccountService{
+  rpc sendCredentials(SendCredentialsRequest) returns (SendCredentialsResponse);
+  rpc verifyConfirmationCode(VerifyConfirmationCodeRequest) returns (VerifyConfirmationCodeResponse);
+}
