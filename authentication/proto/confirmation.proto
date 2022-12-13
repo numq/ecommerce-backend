@@ -12,6 +12,7 @@ enum Role {
 
 message SendCredentialsRequest{
   string credentials = 1;
+  CredentialsType credentialsType = 2;
 }
 
 message SendCredentialsResponse{
