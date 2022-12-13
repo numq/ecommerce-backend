@@ -1,22 +1,14 @@
 syntax = "proto3";
 
 message VerifyAccessTokenRequest{
-  string accessToken = 1;
+  string refreshToken = 1;
+  string accessToken = 2;
 }
 
 message VerifyAccessTokenResponse{
   string id = 1;
 }
 
-message VerifyRefreshTokenRequest{
-  string refreshToken = 1;
-}
-
-message VerifyRefreshTokenResponse{
-  string refreshToken = 1;
-}
-
 service TokenService{
   rpc verifyAccessToken(VerifyAccessTokenRequest) returns (VerifyAccessTokenResponse);
-  rpc verifyRefreshToken(VerifyRefreshTokenRequest) returns (VerifyRefreshTokenResponse);
 }

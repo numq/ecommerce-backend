@@ -12,8 +12,6 @@ enum Role {
 
 message SendCredentialsRequest{
   string credentials = 1;
-  CredentialsType credentialsType = 2;
-  Role role = 3;
 }
 
 message SendCredentialsResponse{
@@ -23,11 +21,13 @@ message SendCredentialsResponse{
 message VerifyConfirmationCodeRequest{
   string credentials = 1;
   CredentialsType credentialsType = 2;
-  string confirmationCode = 3;
+  Role role = 3;
+  string confirmationCode = 4;
 }
 
 message VerifyConfirmationCodeResponse{
-  string refreshToken = 2;
+  string refreshToken = 1;
+  string accessToken = 2;
 }
 
 service ConfirmationService{
