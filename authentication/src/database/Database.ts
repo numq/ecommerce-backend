@@ -1,5 +1,5 @@
-import {inject, injectable} from "inversify";
 import {Document, MongoClient} from "mongodb";
+import {inject, injectable} from "inversify";
 import {Types} from "../di/types";
 import {Config} from "../config/Config";
 

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-enum CredentialsType {
+enum CredentialType {
   PHONE_NUMBER = 0;
 }
 
@@ -12,7 +12,7 @@ enum Role {
 
 message SendCredentialsRequest{
   string credentials = 1;
-  CredentialsType credentialsType = 2;
+  CredentialType credentialType = 2;
 }
 
 message SendCredentialsResponse{
@@ -21,7 +21,7 @@ message SendCredentialsResponse{
 
 message VerifyConfirmationCodeRequest{
   string credentials = 1;
-  CredentialsType credentialsType = 2;
+  CredentialType credentialType = 2;
   Role role = 3;
   string confirmationCode = 4;
 }
