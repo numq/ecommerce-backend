@@ -1,8 +1,7 @@
 syntax = "proto3";
 
 message VerifyAccessTokenRequest{
-  string refreshToken = 1;
-  string accessToken = 2;
+  string accessToken = 1;
 }
 
 message VerifyAccessTokenResponse{

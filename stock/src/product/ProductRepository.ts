@@ -43,15 +43,13 @@ export class ProductRepositoryImpl implements ProductRepository {
                     createdAt: timestamp,
                     updatedAt: timestamp
                 }))),
-            TE.mapLeft(e => e ? e : DatabaseError.insert),
-            TE.map(_ => _.insertedId.toHexString())
+            TE.bimap(() => DatabaseError.insert, _ => _.insertedId.toHexString())
         );
     }
 
     getProductById(id: string): TaskEither<Error, Product> {
         return pipe(
             TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(e => e ? e : DatabaseError.findOne),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
@@ -59,7 +57,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     getProductsFromCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]> {
         return pipe(
             TE.fromTask(() => this.collection.find({categoryId: categoryId}).toArray()),
-            TE.mapLeft(e => e ? e : DatabaseError.find)
+            TE.mapLeft(() => DatabaseError.find)
         );
     }
 
@@ -79,7 +77,7 @@ export class ProductRepositoryImpl implements ProductRepository {
                     updatedAt: new Date().getTime()
                 }
             })),
-            TE.mapLeft(e => e ? e : DatabaseError.update),
+            TE.mapLeft(() => DatabaseError.update),
             TE.chain(() =>
                 TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(product.id)}))),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
@@ -89,8 +87,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     removeProduct(id: string): TaskEither<Error, string> {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(e => e ? e : DatabaseError.deleteOne),
-            TE.map(() => id)
+            TE.bimap(() => DatabaseError.deleteOne, () => id),
         );
     }
 }

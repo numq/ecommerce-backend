@@ -49,7 +49,7 @@ export namespace Module {
     });
 
     const product = new ContainerModule(bind => {
-        bind<Collection<Product> | null>(Types.product.collection).toDynamicValue(() => {
+        bind<Collection<Product>>(Types.product.collection).toDynamicValue(() => {
             return container.get<Database>(Types.app.database).collection<Product>(container.get<Config>(Types.app.config).COLLECTION_PRODUCTS!)!;
         }).inSingletonScope();
         bind<ProductServiceServer>(Types.product.service).to(ProductService).inSingletonScope();

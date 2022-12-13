@@ -37,15 +37,13 @@ export class CategoryRepositoryImpl implements CategoryRepository {
                     createdAt: timestamp,
                     updatedAt: timestamp
                 }))),
-            TE.mapLeft(e => e ? e : DatabaseError.insert),
-            TE.map(_ => _.insertedId.toHexString())
+            TE.bimap(() => DatabaseError.insert, _ => _.insertedId.toHexString())
         );
     }
 
     getCategoryById(id: string): TaskEither<Error, Category> {
         return pipe(
             TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(e => e ? e : DatabaseError.findOne),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
@@ -53,7 +51,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     getCategories(): TaskEither<Error, Category[]> {
         return pipe(
             TE.fromTask(() => this.collection.find().toArray()),
-            TE.mapLeft(e => e ? e : DatabaseError.find)
+            TE.mapLeft(() => DatabaseError.find)
         );
     }
 
@@ -67,7 +65,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
                     updatedAt: new Date().getTime()
                 }
             })),
-            TE.mapLeft(e => e ? e : DatabaseError.update),
+            TE.mapLeft(() => DatabaseError.update),
             TE.chain(() =>
                 TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(category.id)}))),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
@@ -77,8 +75,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     removeCategory(id: string): TaskEither<Error, string> {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(e => e ? e : DatabaseError.deleteOne),
-            TE.map(() => id)
+            TE.bimap(() => DatabaseError.deleteOne, () => id)
         );
     }
 
