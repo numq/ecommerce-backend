@@ -24,7 +24,7 @@ export class ProductRepositoryImpl implements ProductRepository {
     constructor(@inject(Types.product.collection) private readonly collection: Collection<Product>) {
     }
 
-    addProduct(product: Product): TaskEither<Error, string> {
+    addProduct = (product: Product): TaskEither<Error, string> => {
         return pipe(
             TE.tryCatch(() => Promise.resolve<[ObjectId, number]>([new ObjectId(), new Date().getTime()]), () => DatabaseError.id),
             TE.chain(([id, timestamp]: [ObjectId, number]) =>
@@ -47,21 +47,21 @@ export class ProductRepositoryImpl implements ProductRepository {
         );
     }
 
-    getProductById(id: string): TaskEither<Error, Product> {
+    getProductById = (id: string): TaskEither<Error, Product> => {
         return pipe(
             TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
 
-    getProductsFromCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]> {
+    getProductsFromCategory = (categoryId: string, skip: number, limit: number): TaskEither<Error, Product[]> => {
         return pipe(
             TE.fromTask(() => this.collection.find({categoryId: categoryId}).toArray()),
             TE.mapLeft(() => DatabaseError.find)
         );
     }
 
-    updateProduct(product: Product): TaskEither<Error, Product> {
+    updateProduct = (product: Product): TaskEither<Error, Product> => {
         return pipe(
             TE.fromTask(() => this.collection.updateOne({_id: ObjectId.createFromHexString(product.id)}, {
                 $set: {
@@ -84,7 +84,7 @@ export class ProductRepositoryImpl implements ProductRepository {
         );
     }
 
-    removeProduct(id: string): TaskEither<Error, string> {
+    removeProduct = (id: string): TaskEither<Error, string> => {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
             TE.bimap(() => DatabaseError.deleteOne, () => id),

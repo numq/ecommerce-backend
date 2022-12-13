@@ -37,29 +37,29 @@ export class ProductService implements ProductServiceServer {
     ) {
     }
 
-    addProduct(call: ServerUnaryCall<AddProductRequest, AddProductResponse>, callback: sendUnaryData<AddProductResponse>): void {
+    addProduct = (call: ServerUnaryCall<AddProductRequest, AddProductResponse>, callback: sendUnaryData<AddProductResponse>) => {
         const {product} = call.request;
         if (product) {
             response(this.addProductUseCase.execute(ProductMapper.messageToEntity(product)), callback, value => ({id: value}));
         }
     }
 
-    getProductById(call: ServerUnaryCall<GetProductByIdRequest, GetProductByIdResponse>, callback: sendUnaryData<GetProductByIdResponse>): void {
+    getProductById = (call: ServerUnaryCall<GetProductByIdRequest, GetProductByIdResponse>, callback: sendUnaryData<GetProductByIdResponse>) => {
         const {id} = call.request;
         response(this.getProductByIdUseCase.execute(id), callback, value => ({product: ProductMapper.entityToMessage(value)}));
     }
 
-    getProductsFromCategory(call: ServerUnaryCall<GetProductsFromCategoryRequest, GetProductsFromCategoryResponse>, callback: sendUnaryData<GetProductsFromCategoryResponse>): void {
+    getProductsFromCategory = (call: ServerUnaryCall<GetProductsFromCategoryRequest, GetProductsFromCategoryResponse>, callback: sendUnaryData<GetProductsFromCategoryResponse>) => {
         const {categoryId, skip, limit} = call.request;
         response(this.getProductsFromCategoryUseCase.execute([categoryId, skip, limit]), callback, value => ({products: value.map(ProductMapper.entityToMessage)}));
     }
 
-    removeProduct(call: ServerUnaryCall<RemoveProductRequest, RemoveProductResponse>, callback: sendUnaryData<RemoveProductResponse>): void {
+    removeProduct = (call: ServerUnaryCall<RemoveProductRequest, RemoveProductResponse>, callback: sendUnaryData<RemoveProductResponse>) => {
         const {id} = call.request;
         response(this.removeProductUseCase.execute(id), callback, value => ({id: value}));
     }
 
-    updateProduct(call: ServerUnaryCall<UpdateProductRequest, UpdateProductResponse>, callback: sendUnaryData<UpdateProductResponse>): void {
+    updateProduct = (call: ServerUnaryCall<UpdateProductRequest, UpdateProductResponse>, callback: sendUnaryData<UpdateProductResponse>) => {
         const {product} = call.request;
         if (product) {
             response(this.updateProductUseCase.execute(product), callback, value => ({product: ProductMapper.entityToMessage(value)}));

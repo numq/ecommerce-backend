@@ -37,7 +37,7 @@ export namespace Module {
 
     const category = new ContainerModule(bind => {
         bind<Collection<Category>>(Types.category.collection).toDynamicValue(() => {
-            return container.get<Database>(Types.app.database).collection<Category>(container.get<Config>(Types.app.config).COLLECTION_CATEGORIES!)!
+            return container.get<Database>(Types.app.database).collection<Category>(container.get<Config>(Types.app.config).COLLECTION_CATEGORIES!)!;
         }).inSingletonScope();
         bind<CategoryServiceServer>(Types.category.service).to(CategoryService).inSingletonScope();
         bind<CategoryRepository>(Types.category.repository).to(CategoryRepositoryImpl).inSingletonScope();

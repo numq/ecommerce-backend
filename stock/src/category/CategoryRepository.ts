@@ -24,7 +24,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
     constructor(@inject(Types.category.collection) private readonly collection: Collection<Category>) {
     }
 
-    addCategory(category: Category): TaskEither<Error, string> {
+    addCategory = (category: Category): TaskEither<Error, string> => {
         return pipe(
             TE.tryCatch(() => Promise.resolve<[ObjectId, number]>([new ObjectId(), new Date().getTime()]), () => DatabaseError.id),
             TE.chain(([id, timestamp]: [ObjectId, number]) =>
@@ -41,21 +41,21 @@ export class CategoryRepositoryImpl implements CategoryRepository {
         );
     }
 
-    getCategoryById(id: string): TaskEither<Error, Category> {
+    getCategoryById = (id: string): TaskEither<Error, Category> => {
         return pipe(
             TE.fromTask(() => this.collection.findOne({_id: ObjectId.createFromHexString(id)})),
             TE.chain(TE.fromNullable(DatabaseError.findOne))
         );
     }
 
-    getCategories(): TaskEither<Error, Category[]> {
+    getCategories = (): TaskEither<Error, Category[]> => {
         return pipe(
             TE.fromTask(() => this.collection.find().toArray()),
             TE.mapLeft(() => DatabaseError.find)
         );
     }
 
-    updateCategory(category: Category): TaskEither<Error, Category> {
+    updateCategory = (category: Category): TaskEither<Error, Category> => {
         return pipe(
             TE.fromTask(() => this.collection.updateOne({_id: ObjectId.createFromHexString(category.id)}, {
                 $set: {
@@ -72,7 +72,7 @@ export class CategoryRepositoryImpl implements CategoryRepository {
         );
     }
 
-    removeCategory(id: string): TaskEither<Error, string> {
+    removeCategory = (id: string): TaskEither<Error, string> => {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
             TE.bimap(() => DatabaseError.deleteOne, () => id)

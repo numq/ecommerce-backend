@@ -37,28 +37,28 @@ export class CategoryService implements CategoryServiceServer {
     ) {
     }
 
-    addCategory(call: ServerUnaryCall<AddCategoryRequest, AddCategoryResponse>, callback: sendUnaryData<AddCategoryResponse>): void {
+    addCategory = (call: ServerUnaryCall<AddCategoryRequest, AddCategoryResponse>, callback: sendUnaryData<AddCategoryResponse>) => {
         const {category} = call.request;
         if (category) {
             response(this.addCategoryUseCase.execute(CategoryMapper.messageToEntity(category)), callback, value => ({id: value}));
         }
     }
 
-    getCategories(call: ServerUnaryCall<GetCategoriesRequest, GetCategoriesResponse>, callback: sendUnaryData<GetCategoriesResponse>): void {
+    getCategories = (call: ServerUnaryCall<GetCategoriesRequest, GetCategoriesResponse>, callback: sendUnaryData<GetCategoriesResponse>) => {
         response(this.getCategoriesUseCase.execute(), callback, value => ({categories: value.map(CategoryMapper.entityToMessage)}));
     }
 
-    getCategoryById(call: ServerUnaryCall<GetCategoryByIdRequest, GetCategoryByIdResponse>, callback: sendUnaryData<GetCategoryByIdResponse>): void {
+    getCategoryById = (call: ServerUnaryCall<GetCategoryByIdRequest, GetCategoryByIdResponse>, callback: sendUnaryData<GetCategoryByIdResponse>) => {
         const {id} = call.request;
         response(this.getCategoryByIdUseCase.execute(id), callback, value => ({category: CategoryMapper.entityToMessage(value)}));
     }
 
-    removeCategory(call: ServerUnaryCall<RemoveCategoryRequest, RemoveCategoryResponse>, callback: sendUnaryData<RemoveCategoryResponse>): void {
+    removeCategory = (call: ServerUnaryCall<RemoveCategoryRequest, RemoveCategoryResponse>, callback: sendUnaryData<RemoveCategoryResponse>) => {
         const {id} = call.request;
         response(this.removeCategoryUseCase.execute(id), callback, value => ({id: value}));
     }
 
-    updateCategory(call: ServerUnaryCall<UpdateCategoryRequest, UpdateCategoryResponse>, callback: sendUnaryData<UpdateCategoryResponse>): void {
+    updateCategory = (call: ServerUnaryCall<UpdateCategoryRequest, UpdateCategoryResponse>, callback: sendUnaryData<UpdateCategoryResponse>) => {
         const {category} = call.request;
         if (category) {
             response(this.updateCategoryUseCase.execute(category), callback, value => ({category: CategoryMapper.entityToMessage(value)}));
