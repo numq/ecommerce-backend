@@ -30,7 +30,7 @@ export class CartRepositoryImpl implements CartRepository {
     constructor(@inject(Types.app.cache) private readonly cache: Cache) {
     }
 
-    getItemById(cartId: string, itemId: string): TaskEither<Error, Item> {
+    getItemById = (cartId: string, itemId: string): TaskEither<Error, Item> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -45,7 +45,7 @@ export class CartRepositoryImpl implements CartRepository {
         );
     }
 
-    getItemByIdOrNull(cartId: string, itemId: string): TaskEither<Error, Item | null> {
+    getItemByIdOrNull = (cartId: string, itemId: string): TaskEither<Error, Item | null> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -63,7 +63,7 @@ export class CartRepositoryImpl implements CartRepository {
     }
 
 
-    removeItemById(cartId: string, itemId: string): TaskEither<Error, number> {
+    removeItemById = (cartId: string, itemId: string): TaskEither<Error, number> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -71,7 +71,7 @@ export class CartRepositoryImpl implements CartRepository {
         );
     }
 
-    createItem(cartId: string, itemId: string): TaskEither<Error, number> {
+    createItem = (cartId: string, itemId: string): TaskEither<Error, number> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -83,7 +83,7 @@ export class CartRepositoryImpl implements CartRepository {
         );
     }
 
-    updateItem(cartId: string, item: Item): TaskEither<Error, number> {
+    updateItem = (cartId: string, item: Item): TaskEither<Error, number> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -95,7 +95,7 @@ export class CartRepositoryImpl implements CartRepository {
         );
     }
 
-    getItemsByCartId(cartId: string): TaskEither<Error, Item[]> {
+    getItemsByCartId = (cartId: string): TaskEither<Error, Item[]> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),
@@ -112,7 +112,7 @@ export class CartRepositoryImpl implements CartRepository {
         );
     }
 
-    removeItemsByCartId(cartId: string): TaskEither<Error, string> {
+    removeItemsByCartId = (cartId: string): TaskEither<Error, string> => {
         return pipe(
             this.cache.client,
             TE.fromNullable(CacheError.client),

@@ -31,22 +31,22 @@ export class CartService implements CartServiceServer {
     ) {
     }
 
-    getCart(call: ServerUnaryCall<GetCartRequest, GetCartResponse>, callback: sendUnaryData<GetCartResponse>): void {
+    getCart = (call: ServerUnaryCall<GetCartRequest, GetCartResponse>, callback: sendUnaryData<GetCartResponse>) => {
         const {cartId} = call.request;
         response(this.getCartUseCase.execute(cartId), callback, value => ({items: value.map(ItemMapper.entityToMessage)}));
     }
 
-    clearCart(call: ServerUnaryCall<ClearCartRequest, ClearCartResponse>, callback: sendUnaryData<ClearCartResponse>): void {
+    clearCart = (call: ServerUnaryCall<ClearCartRequest, ClearCartResponse>, callback: sendUnaryData<ClearCartResponse>) => {
         const {cartId} = call.request;
         response(this.clearCartUseCase.execute(cartId), callback, value => ({cartId: value}));
     }
 
-    increaseItemQuantity(call: ServerUnaryCall<IncreaseItemQuantityRequest, IncreaseItemQuantityResponse>, callback: sendUnaryData<IncreaseItemQuantityResponse>): void {
+    increaseItemQuantity = (call: ServerUnaryCall<IncreaseItemQuantityRequest, IncreaseItemQuantityResponse>, callback: sendUnaryData<IncreaseItemQuantityResponse>) => {
         const {cartId, itemId} = call.request;
         response(this.increaseItemQuantityUseCase.execute([cartId, itemId]), callback, value => ({item: ItemMapper.entityToMessage(value)}));
     }
 
-    decreaseItemQuantity(call: ServerUnaryCall<DecreaseItemQuantityRequest, DecreaseItemQuantityResponse>, callback: sendUnaryData<DecreaseItemQuantityResponse>): void {
+    decreaseItemQuantity = (call: ServerUnaryCall<DecreaseItemQuantityRequest, DecreaseItemQuantityResponse>, callback: sendUnaryData<DecreaseItemQuantityResponse>) => {
         const {cartId, itemId} = call.request;
         response(this.decreaseItemQuantityUseCase.execute([cartId, itemId]), callback, value => ({item: value ? ItemMapper.entityToMessage(value) : undefined}));
     }
