@@ -1,5 +1,5 @@
 import {injectable} from "inversify";
-import {Role} from "../role/Role";
+import {Role} from "../account/Role";
 import {Secret} from "jsonwebtoken";
 
 @injectable()
@@ -18,7 +18,6 @@ export class Config {
                 return this.SECRET_KEY_CUSTOMER;
         }
     };
-    readonly TIME_TO_RETRY = 60000;
     readonly CACHE_URL = `${process.env.CACHE_HOST}://${process.env.CACHE_HOSTNAME}:${process.env.CACHE_PORT}`;
     readonly CACHE_NAME = process.env.CACHE_NAME;
     readonly DATABASE_URL = `${process.env.DATABASE_HOST}://${process.env.DATABASE_HOSTNAME}:${process.env.DATABASE_PORT}`;
