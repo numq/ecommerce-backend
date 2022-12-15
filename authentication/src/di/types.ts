@@ -19,6 +19,7 @@ export namespace Types {
         collection: Symbol.for("tokenCollection"),
         service: Symbol.for("tokenService"),
         repository: Symbol.for("tokenRepository"),
-        verifyAccessToken: Symbol.for("verifyAccessToken")
+        verifyAccessToken: Symbol.for("verifyAccessToken"),
+        refreshAccessToken: Symbol.for("refreshAccessToken")
     };
 }
