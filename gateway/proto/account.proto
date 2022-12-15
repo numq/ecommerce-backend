@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message SendPhoneNumberRequest{
+  string phoneNumber = 1;
+  string role = 2;
+}
+
+message SendPhoneNumberResponse{
+  uint64 retryTimeout = 1;
+}
+
+message SendConfirmationCodeRequest{
+  string confirmationCode = 1;
+  string role = 2;
+}
+
+message SendConfirmationCodeResponse{
+  string toke = 1;
+}
+
+service AccountService{
+  rpc sendPhoneNumber(SendPhoneNumberRequest) returns (SendPhoneNumberResponse);
+  rpc sendConfirmation(SendConfirmationCodeRequest) returns (SendConfirmationCodeResponse);
+}
