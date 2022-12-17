@@ -32,7 +32,7 @@ message GetProductByIdResponse {
 }
 
 message GetProductsFromCategoryRequest {
-  string category_id = 1;
+  string categoryId = 1;
   int32 skip = 2;
   int32 limit = 3;
 }
