@@ -72,7 +72,6 @@ export class TokenRepositoryImpl implements TokenRepository {
                 id: payload.id,
                 credentials: payload.credentials,
                 credentialType: payload.credentialType,
-                role: payload.role,
                 createdAt: payload.createdAt,
                 updatedAt: payload.updatedAt
             }))
