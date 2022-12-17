@@ -4,8 +4,7 @@ import {Types} from "../di/types";
 import {SendCredentials} from "./SendCredentials";
 import {VerifyConfirmationCode} from "./VerifyConfirmationCode";
 import {response} from "../response";
-import {CredentialType} from "./CredentialType";
-import {Role} from "../account/Role";
+import {CredentialType} from "../account/CredentialType";
 import {
     ConfirmationServiceServer,
     SendCredentialsRequest,
@@ -30,8 +29,8 @@ export class ConfirmationService implements ConfirmationServiceServer {
     }
 
     verifyConfirmationCode = (call: ServerUnaryCall<VerifyConfirmationCodeRequest, VerifyConfirmationCodeResponse>, callback: sendUnaryData<VerifyConfirmationCodeResponse>) => {
-        const {credentials, credentialType, role, confirmationCode} = call.request;
-        response(this.verifyConfirmationCodeUseCase.execute([credentials, credentialType as CredentialType, role as Role, confirmationCode]), callback, ([refreshToken, accessToken]) => ({
+        const {credentials, credentialType, confirmationCode} = call.request;
+        response(this.verifyConfirmationCodeUseCase.execute([credentials, credentialType as CredentialType, confirmationCode]), callback, ([refreshToken, accessToken]) => ({
             refreshToken: refreshToken,
             accessToken: accessToken
         }));

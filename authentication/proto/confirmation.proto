@@ -4,12 +4,6 @@ enum CredentialType {
   PHONE_NUMBER = 0;
 }
 
-enum Role {
-  STAFF = 0;
-  COURIER = 1;
-  CUSTOMER = 2;
-}
-
 message SendCredentialsRequest{
   string credentials = 1;
   CredentialType credentialType = 2;
@@ -22,8 +16,7 @@ message SendCredentialsResponse{
 message VerifyConfirmationCodeRequest{
   string credentials = 1;
   CredentialType credentialType = 2;
-  Role role = 3;
-  string confirmationCode = 4;
+  string confirmationCode = 3;
 }
 
 message VerifyConfirmationCodeResponse{

@@ -6,7 +6,7 @@ import {taskEither as TE} from "fp-ts";
 import {ConfirmationError} from "./ConfirmationError";
 import {Cache} from "../cache/Cache";
 import {CacheError} from "../cache/CacheError";
-import {CredentialType} from "./CredentialType";
+import {CredentialType} from "../account/CredentialType";
 
 export interface ConfirmationRepository {
     sendConfirmationCode(credentials: string, credentialType: CredentialType): TaskEither<Error, number>

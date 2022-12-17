@@ -3,7 +3,7 @@ import {UseCase} from "../interactor/UseCase";
 import {Types} from "../di/types";
 import {TaskEither} from "fp-ts/TaskEither";
 import {ConfirmationRepository} from "./ConfirmationRepository";
-import {CredentialType} from "./CredentialType";
+import {CredentialType} from "../account/CredentialType";
 
 @injectable()
 export class SendCredentials extends UseCase<[string, CredentialType], number> {

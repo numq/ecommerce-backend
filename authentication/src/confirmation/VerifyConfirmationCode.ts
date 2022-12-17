@@ -7,11 +7,10 @@ import {TaskEither} from "fp-ts/TaskEither";
 import {pipe} from "fp-ts/function";
 import {taskEither as TE} from "fp-ts";
 import {ConfirmationRepository} from "./ConfirmationRepository";
-import {CredentialType} from "./CredentialType";
-import {Role} from "../account/Role";
+import {CredentialType} from "../account/CredentialType";
 
 @injectable()
-export class VerifyConfirmationCode extends UseCase<[string, CredentialType, Role, string], [string, string]> {
+export class VerifyConfirmationCode extends UseCase<[string, CredentialType, string], [string, string]> {
     constructor(
         @inject(Types.account.repository) private readonly accountRepository: AccountRepository,
         @inject(Types.confirmation.repository) private readonly confirmationRepository: ConfirmationRepository,
@@ -20,8 +19,8 @@ export class VerifyConfirmationCode extends UseCase<[string, CredentialType, Rol
         super();
     }
 
-    execute(arg: [string, CredentialType, Role, string]): TaskEither<Error, [string, string]> {
-        const [credentials, credentialType, role, confirmationCode] = arg;
+    execute(arg: [string, CredentialType, string]): TaskEither<Error, [string, string]> {
+        const [credentials, credentialType, confirmationCode] = arg;
         return pipe(
             this.confirmationRepository.verifyConfirmationCode(credentials, credentialType, confirmationCode),
             TE.chain(this.accountRepository.getAccountByCredentialsOrNull),
@@ -31,8 +30,8 @@ export class VerifyConfirmationCode extends UseCase<[string, CredentialType, Rol
                      * sign up
                      */
                     return pipe(
-                        this.accountRepository.addAccount(credentials, credentialType, role),
-                        TE.chain(this.accountRepository.getAccountByCredentials)
+                        this.accountRepository.addAccount(credentials, credentialType),
+                        TE.chain(this.accountRepository.getAccountById)
                     );
                 } else {
                     /**
