@@ -1,11 +1,9 @@
-import {CredentialType} from "../confirmation/CredentialType";
-import {Role} from "./Role";
+import {CredentialType} from "./CredentialType";
 
 export type Account = {
     id: string;
     credentials: string;
     credentialType: CredentialType;
-    role: Role;
     createdAt: number;
     updatedAt: number;
 };

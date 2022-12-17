@@ -6,11 +6,10 @@ import {taskEither as TE} from "fp-ts";
 import {Collection, ObjectId} from "mongodb";
 import {Account} from "./Account";
 import {DatabaseError} from "../database/DatabaseError";
-import {CredentialType} from "../confirmation/CredentialType";
-import {Role} from "./Role";
+import {CredentialType} from "./CredentialType";
 
 export interface AccountRepository {
-    addAccount(credentials: string, credentialType: CredentialType, role: Role): TaskEither<Error, string>
+    addAccount(credentials: string, credentialType: CredentialType): TaskEither<Error, string>
 
     getAccountById(id: string): TaskEither<Error, Account>
 
@@ -33,7 +32,7 @@ export class AccountRepositoryImpl implements AccountRepository {
         this.collection = collection;
     }
 
-    addAccount = (credentials: string, credentialType: CredentialType, role: Role): TaskEither<Error, string> => {
+    addAccount = (credentials: string, credentialType: CredentialType): TaskEither<Error, string> => {
         return pipe(
             TE.tryCatch(() => Promise.resolve<[ObjectId, number]>([new ObjectId(), new Date().getTime()]), () => DatabaseError.id),
             TE.chain(([id, timestamp]: [ObjectId, number]) =>
@@ -42,12 +41,10 @@ export class AccountRepositoryImpl implements AccountRepository {
                     id: id.toHexString(),
                     credentials: credentials,
                     credentialType: credentialType,
-                    role: role,
                     createdAt: timestamp,
                     updatedAt: timestamp
                 }))),
-            TE.mapLeft(() => DatabaseError.insert),
-            TE.map(_ => _.insertedId.toHexString())
+            TE.bimap(() => DatabaseError.insert, _ => _.insertedId.toHexString())
         );
     }
 
@@ -68,15 +65,14 @@ export class AccountRepositoryImpl implements AccountRepository {
     getAccountByCredentialsOrNull = (credentials: string): TaskEither<Error, Account | null> => {
         return pipe(
             TE.fromTask(() => this.collection.findOne({credentials: credentials})),
-            TE.mapLeft(() => DatabaseError.findOne)
+            TE.bimap(() => DatabaseError.findOne, account => account ? account : null)
         );
     }
 
     removeAccount = (id: string): TaskEither<Error, string> => {
         return pipe(
             TE.fromTask(() => this.collection.deleteOne({_id: ObjectId.createFromHexString(id)})),
-            TE.mapLeft(() => DatabaseError.deleteOne),
-            TE.map(() => id)
+            TE.bimap(() => DatabaseError.deleteOne, () => id)
         );
     }
 
