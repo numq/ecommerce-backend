@@ -54,13 +54,13 @@ export class CatalogRepositoryImpl implements CatalogRepository {
         TE.chain(TE.fromNullable(DatabaseError.findOne))
     );
 
-    getItemsByCategory = (categoryId: string): TaskEither<Error, CatalogItem[]> => pipe(
-        TE.fromTask(() => this.collection.find({categoryId: categoryId}).toArray()),
+    getItemsByCategory = (categoryId: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
+        TE.fromTask(() => this.collection.find({categoryId: categoryId}).skip(skip).limit(limit).toArray()),
         TE.mapLeft(() => DatabaseError.find)
     );
 
-    getItemsByTag = (tag: string): TaskEither<Error, CatalogItem[]> => pipe(
-        TE.fromTask(() => this.collection.find({tags: tag}).toArray()),
+    getItemsByTag = (tag: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
+        TE.fromTask(() => this.collection.find({tags: tag}).skip(skip).limit(limit).toArray()),
         TE.mapLeft(() => DatabaseError.find)
     );
 
