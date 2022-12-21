@@ -7,7 +7,7 @@ services:
     environment:
       - DATABASE_HOSTNAME=mongodb
     ports:
-      - "8082:8082"
+      - "8002:8002"
   mongodb:
     image: mongo:latest
     restart: always
