@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+message CatalogItem {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  bytes imageBytes = 4;
+  float price = 5;
+  float discount = 6;
+  float weight = 7;
+  int32 quantity = 8;
+  string categoryId = 9;
+  repeated string tags = 10;
+  uint64 createdAt = 11;
+  uint64 updatedAt = 12;
+}
+
+message AddCatalogItemRequest {
+  CatalogItem item = 1;
+}
+
+message AddCatalogItemResponse {
+  string id = 1;
+}
+
+message GetCatalogItemByIdRequest {
+  string id = 1;
+}
+
+message GetCatalogItemByIdResponse {
+  CatalogItem item = 1;
+}
+
+message GetCatalogItemsByCategoryRequest {
+  string categoryId = 1;
+  int32 skip = 2;
+  int32 limit = 3;
+}
+
+message GetCatalogItemsByCategoryResponse {
+  repeated CatalogItem items = 1;
+}
+
+message GetCatalogItemsByTagRequest {
+  string tag = 1;
+  int32 skip = 2;
+  int32 limit = 3;
+}
+
+message GetCatalogItemsByTagResponse {
+  repeated CatalogItem items = 1;
+}
+
+message UpdateCatalogItemRequest {
+  CatalogItem item = 1;
+}
+
+message UpdateCatalogItemResponse {
+  CatalogItem item = 1;
+}
+
+message RemoveCatalogItemRequest {
+  string id = 1;
+}
+
+message RemoveCatalogItemResponse {
+  string id = 1;
+}
+
+service CatalogService {
+  rpc addCatalogItem(AddCatalogItemRequest) returns (AddCatalogItemResponse);
+  rpc getCatalogItemById(GetCatalogItemByIdRequest) returns (GetCatalogItemByIdResponse);
+  rpc getCatalogItemsByCategory(GetCatalogItemsByCategoryRequest) returns (GetCatalogItemsByCategoryResponse);
+  rpc getCatalogItemsByTag(GetCatalogItemsByTagRequest) returns (GetCatalogItemsByTagResponse);
+  rpc updateCatalogItem(UpdateCatalogItemRequest) returns (UpdateCatalogItemResponse);
+  rpc removeCatalogItem(RemoveCatalogItemRequest) returns (RemoveCatalogItemResponse);
+}
