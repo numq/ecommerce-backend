@@ -1,7 +1,6 @@
 import {inject, injectable} from "inversify";
 import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from "@grpc/grpc-js";
 import {Types} from "../di/types";
-import {Config} from "../config/Config";
 import {AddCatalogItem} from "./AddCatalogItem";
 import {GetCatalogItemById} from "./GetCatalogItemById";
 import {GetCatalogItemsByCategory} from "./GetCatalogItemsByCategory";
@@ -31,7 +30,6 @@ export class CatalogService implements CatalogServiceServer {
     [name: string]: UntypedHandleCall | any;
 
     constructor(
-        @inject(Types.app.config) private readonly config: Config,
         @inject(Types.catalog.addCatalogItem) private readonly addCatalogItemUseCase: AddCatalogItem,
         @inject(Types.catalog.getCatalogItemById) private readonly getCatalogItemByIdUseCase: GetCatalogItemById,
         @inject(Types.catalog.getCatalogItemsByCategory) private readonly getCatalogItemsByCategoryUseCase: GetCatalogItemsByCategory,
