@@ -11,7 +11,7 @@ ___
 - TS-Proto
 - MongoDB
 
-![image](./media/food-delivery-backend-stock.png)
+![image](./media/food-delivery-backend-catalog.png)
 
 ## Setup:
 
