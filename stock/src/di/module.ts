@@ -13,16 +13,16 @@ import {GetProductsFromCategory} from "../product/GetProductsFromCategory";
 import {ProductServiceServer} from "../generated/product";
 import {Collection} from "mongodb";
 import {Database} from "../database/Database";
-import {AddCategory} from "../category/AddCategory";
-import {GetCategoryById} from "../category/GetCategoryById";
-import {GetCategories} from "../category/GetCategories";
-import {UpdateCategory} from "../category/UpdateCategory";
-import {RemoveCategory} from "../category/RemoveCategory";
+import {AddCategory} from "../../../category/src/category/AddCategory";
+import {GetCategoryById} from "../../../category/src/category/GetCategoryById";
+import {GetCategories} from "../../../category/src/category/GetCategories";
+import {UpdateCategory} from "../../../category/src/category/UpdateCategory";
+import {RemoveCategory} from "../../../category/src/category/RemoveCategory";
 import {CategoryServiceServer} from "../generated/category";
-import {CategoryRepository, CategoryRepositoryImpl} from "../category/CategoryRepository";
-import {CategoryService} from "../category/CategoryService";
+import {CategoryRepository, CategoryRepositoryImpl} from "../../../category/src/category/CategoryRepository";
+import {CategoryService} from "../../../category/src/category/CategoryService";
 import {Product} from "../product/Product";
-import {Category} from "../category/Category";
+import {Category} from "../../../category/src/category/Category";
 
 export namespace Module {
 

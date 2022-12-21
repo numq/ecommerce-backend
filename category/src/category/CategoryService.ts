@@ -1,4 +1,13 @@
 import {inject, injectable} from "inversify";
+import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from "@grpc/grpc-js";
+import {AddCategory} from "./AddCategory";
+import {GetCategoryById} from "./GetCategoryById";
+import {GetCategories} from "./GetCategories";
+import {UpdateCategory} from "./UpdateCategory";
+import {RemoveCategory} from "./RemoveCategory";
+import {CategoryMapper} from "./CategoryMapper";
+import {Types} from "../di/types";
+import {response} from "../response";
 import {
     AddCategoryRequest,
     AddCategoryResponse,
@@ -12,23 +21,12 @@ import {
     UpdateCategoryRequest,
     UpdateCategoryResponse
 } from "../generated/category";
-import {Types} from "../di/types";
-import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from "@grpc/grpc-js";
-import {Config} from "../config/Config";
-import {AddCategory} from "./AddCategory";
-import {GetCategoryById} from "./GetCategoryById";
-import {GetCategories} from "./GetCategories";
-import {UpdateCategory} from "./UpdateCategory";
-import {RemoveCategory} from "./RemoveCategory";
-import {CategoryMapper} from "./CategoryMapper";
-import {response} from "../response";
 
 @injectable()
 export class CategoryService implements CategoryServiceServer {
     [name: string]: UntypedHandleCall | any;
 
     constructor(
-        @inject(Types.app.config) private readonly config: Config,
         @inject(Types.category.addCategory) private readonly addCategoryUseCase: AddCategory,
         @inject(Types.category.getCategoryById) private readonly getCategoryByIdUseCase: GetCategoryById,
         @inject(Types.category.getCategories) private readonly getCategoriesUseCase: GetCategories,
@@ -45,7 +43,8 @@ export class CategoryService implements CategoryServiceServer {
     }
 
     getCategories = (call: ServerUnaryCall<GetCategoriesRequest, GetCategoriesResponse>, callback: sendUnaryData<GetCategoriesResponse>) => {
-        response(this.getCategoriesUseCase.execute(), callback, value => ({categories: value.map(CategoryMapper.entityToMessage)}));
+        const {skip, limit} = call.request;
+        response(this.getCategoriesUseCase.execute([skip, limit]), callback, value => ({categories: value.map(CategoryMapper.entityToMessage)}));
     }
 
     getCategoryById = (call: ServerUnaryCall<GetCategoryByIdRequest, GetCategoryByIdResponse>, callback: sendUnaryData<GetCategoryByIdResponse>) => {

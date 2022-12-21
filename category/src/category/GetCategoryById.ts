@@ -1,9 +1,9 @@
 import {inject, injectable} from "inversify";
-import {UseCase} from "../interactor/UseCase";
 import {Category} from "./Category";
-import {Types} from "../di/types";
 import {CategoryRepository} from "./CategoryRepository";
 import {TaskEither} from "fp-ts/TaskEither";
+import {UseCase} from "../interactor/UseCase";
+import {Types} from "../di/types";
 
 @injectable()
 export class GetCategoryById extends UseCase<string, Category> {
