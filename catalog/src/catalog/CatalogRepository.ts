@@ -13,9 +13,7 @@ export interface CatalogRepository {
 
     getItemById(id: string): TaskEither<Error, CatalogItem>
 
-    getItemsByCategory(categoryId: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]>
-
-    getItemsByTag(tag: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]>
+    getItemsByTags(tag: string[], skip: number, limit: number): TaskEither<Error, CatalogItem[]>
 
     updateItem(item: CatalogItem): TaskEither<Error, CatalogItem>
 
@@ -41,7 +39,6 @@ export class CatalogRepositoryImpl implements CatalogRepository {
                 discount: item.discount,
                 weight: item.weight,
                 quantity: item.quantity,
-                categoryId: item.categoryId,
                 tags: item.tags,
                 createdAt: timestamp,
                 updatedAt: timestamp
@@ -54,13 +51,8 @@ export class CatalogRepositoryImpl implements CatalogRepository {
         TE.chain(TE.fromNullable(DatabaseError.findOne))
     );
 
-    getItemsByCategory = (categoryId: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
-        TE.fromTask(() => this.collection.find({categoryId: categoryId}).skip(skip).limit(limit).toArray()),
-        TE.mapLeft(() => DatabaseError.find)
-    );
-
-    getItemsByTag = (tag: string, skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
-        TE.fromTask(() => this.collection.find({tags: tag}).skip(skip).limit(limit).toArray()),
+    getItemsByTags = (tags: string[], skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
+        TE.fromTask(() => this.collection.find({tags: {$in: tags}}).skip(skip).limit(limit).toArray()),
         TE.mapLeft(() => DatabaseError.find)
     );
 
@@ -74,7 +66,6 @@ export class CatalogRepositoryImpl implements CatalogRepository {
                 discount: item.discount,
                 weight: item.weight,
                 quantity: item.quantity,
-                categoryId: item.categoryId,
                 tags: item.tags,
                 updatedAt: new Date().getTime()
             }

@@ -12,7 +12,6 @@ export namespace CatalogItemMapper {
         discount: entity.discount,
         weight: entity.weight,
         quantity: entity.quantity,
-        categoryId: entity.categoryId,
         tags: entity.tags,
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt
@@ -26,7 +25,6 @@ export namespace CatalogItemMapper {
         discount: message.discount,
         weight: message.weight,
         quantity: message.quantity,
-        categoryId: message.categoryId,
         tags: message.tags,
         createdAt: message.createdAt,
         updatedAt: message.updatedAt

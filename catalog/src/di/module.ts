@@ -7,13 +7,12 @@ import {Collection} from "mongodb";
 import {Database} from "../database/Database";
 import {RemoveCatalogItem} from "../catalog/RemoveCatalogItem";
 import {UpdateCatalogItem} from "../catalog/UpdateCatalogItem";
-import {GetCatalogItemsByCategory} from "../catalog/GetCatalogItemsByCategory";
 import {GetCatalogItemById} from "../catalog/GetCatalogItemById";
 import {AddCatalogItem} from "../catalog/AddCatalogItem";
 import {CatalogRepository, CatalogRepositoryImpl} from "../catalog/CatalogRepository";
 import {CatalogServiceServer} from "../generated/catalog";
 import {CatalogService} from "../catalog/CatalogService";
-import {GetCatalogItemsByTag} from "../catalog/GetCatalogItemsByTag";
+import {GetCatalogItemsByTags} from "../catalog/GetCatalogItemsByTags";
 import {CatalogItem} from "../catalog/CatalogItem";
 
 export namespace Module {
@@ -35,8 +34,7 @@ export namespace Module {
         bind<CatalogRepository>(Types.catalog.repository).to(CatalogRepositoryImpl).inSingletonScope();
         bind<AddCatalogItem>(Types.catalog.addCatalogItem).to(AddCatalogItem).inTransientScope();
         bind<GetCatalogItemById>(Types.catalog.getCatalogItemById).to(GetCatalogItemById).inTransientScope();
-        bind<GetCatalogItemsByCategory>(Types.catalog.getCatalogItemsByCategory).to(GetCatalogItemsByCategory).inTransientScope();
-        bind<GetCatalogItemsByTag>(Types.catalog.getCatalogItemsByTag).to(GetCatalogItemsByTag).inTransientScope();
+        bind<GetCatalogItemsByTags>(Types.catalog.getCatalogItemsByTags).to(GetCatalogItemsByTags).inTransientScope();
         bind<UpdateCatalogItem>(Types.catalog.updateCatalogItem).to(UpdateCatalogItem).inTransientScope();
         bind<RemoveCatalogItem>(Types.catalog.removeCatalogItem).to(RemoveCatalogItem).inTransientScope();
     });

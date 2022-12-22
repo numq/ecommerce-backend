@@ -7,7 +7,6 @@ export type CatalogItem = {
     discount: number;
     weight: number;
     quantity: number;
-    categoryId: string;
     tags: string[];
     createdAt: number;
     updatedAt: number;

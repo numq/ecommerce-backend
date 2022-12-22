@@ -10,8 +10,7 @@ export namespace Types {
         service: Symbol.for("catalogService"),
         addCatalogItem: Symbol.for("addCatalogItem"),
         getCatalogItemById: Symbol.for("getCatalogItemById"),
-        getCatalogItemsByCategory: Symbol.for("getCatalogItemsByCategory"),
-        getCatalogItemsByTag: Symbol.for("getCatalogItemsByTag"),
+        getCatalogItemsByTags: Symbol.for("getCatalogItemsByTags"),
         updateCatalogItem: Symbol.for("updateCatalogItem"),
         removeCatalogItem: Symbol.for("removeCatalogItem")
     };

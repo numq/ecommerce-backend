@@ -3,22 +3,19 @@ import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from "@grpc/grpc-js";
 import {Types} from "../di/types";
 import {AddCatalogItem} from "./AddCatalogItem";
 import {GetCatalogItemById} from "./GetCatalogItemById";
-import {GetCatalogItemsByCategory} from "./GetCatalogItemsByCategory";
 import {UpdateCatalogItem} from "./UpdateCatalogItem";
 import {RemoveCatalogItem} from "./RemoveCatalogItem";
 import {response} from "../response";
 import {CatalogItemMapper} from "./CatalogItemMapper";
-import {GetCatalogItemsByTag} from "./GetCatalogItemsByTag";
+import {GetCatalogItemsByTags} from "./GetCatalogItemsByTags";
 import {
     AddCatalogItemRequest,
     AddCatalogItemResponse,
     CatalogServiceServer,
     GetCatalogItemByIdRequest,
     GetCatalogItemByIdResponse,
-    GetCatalogItemsByCategoryRequest,
-    GetCatalogItemsByCategoryResponse,
-    GetCatalogItemsByTagRequest,
-    GetCatalogItemsByTagResponse,
+    GetCatalogItemsByTagsRequest,
+    GetCatalogItemsByTagsResponse,
     RemoveCatalogItemRequest,
     RemoveCatalogItemResponse,
     UpdateCatalogItemRequest,
@@ -32,8 +29,7 @@ export class CatalogService implements CatalogServiceServer {
     constructor(
         @inject(Types.catalog.addCatalogItem) private readonly addCatalogItemUseCase: AddCatalogItem,
         @inject(Types.catalog.getCatalogItemById) private readonly getCatalogItemByIdUseCase: GetCatalogItemById,
-        @inject(Types.catalog.getCatalogItemsByCategory) private readonly getCatalogItemsByCategoryUseCase: GetCatalogItemsByCategory,
-        @inject(Types.catalog.getCatalogItemsByTag) private readonly getCatalogItemsByTagUseCase: GetCatalogItemsByTag,
+        @inject(Types.catalog.getCatalogItemsByTags) private readonly getCatalogItemsByTagsUseCase: GetCatalogItemsByTags,
         @inject(Types.catalog.updateCatalogItem) private readonly updateCatalogItemUseCase: UpdateCatalogItem,
         @inject(Types.catalog.removeCatalogItem) private removeCatalogItemUseCase: RemoveCatalogItem
     ) {
@@ -51,14 +47,9 @@ export class CatalogService implements CatalogServiceServer {
         response(this.getCatalogItemByIdUseCase.execute(id), callback, value => ({item: CatalogItemMapper.entityToMessage(value)}));
     }
 
-    getCatalogItemsByCategory = (call: ServerUnaryCall<GetCatalogItemsByCategoryRequest, GetCatalogItemsByCategoryResponse>, callback: sendUnaryData<GetCatalogItemsByCategoryResponse>) => {
-        const {categoryId, skip, limit} = call.request;
-        response(this.getCatalogItemsByCategoryUseCase.execute([categoryId, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
-    }
-
-    getCatalogItemsByTag = (call: ServerUnaryCall<GetCatalogItemsByTagRequest, GetCatalogItemsByTagResponse>, callback: sendUnaryData<GetCatalogItemsByTagResponse>) => {
-        const {tag, skip, limit} = call.request;
-        response(this.getCatalogItemsByTagUseCase.execute([tag, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
+    getCatalogItemsByTags = (call: ServerUnaryCall<GetCatalogItemsByTagsRequest, GetCatalogItemsByTagsResponse>, callback: sendUnaryData<GetCatalogItemsByTagsResponse>) => {
+        const {tags, skip, limit} = call.request;
+        response(this.getCatalogItemsByTagsUseCase.execute([tags, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
     }
 
     removeCatalogItem = (call: ServerUnaryCall<RemoveCatalogItemRequest, RemoveCatalogItemResponse>, callback: sendUnaryData<RemoveCatalogItemResponse>) => {
