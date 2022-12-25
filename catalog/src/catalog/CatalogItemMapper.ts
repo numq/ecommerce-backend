@@ -5,6 +5,7 @@ import {Buffer} from "buffer";
 export namespace CatalogItemMapper {
     export const entityToMessage = (entity: CatalogItem): CatalogItemMessage => ({
         id: entity.id,
+        sku: entity.sku,
         name: entity.name,
         description: entity.description,
         imageBytes: Buffer.from(entity.imageBytes),
@@ -18,6 +19,7 @@ export namespace CatalogItemMapper {
     });
     export const messageToEntity = (message: CatalogItemMessage): CatalogItem => ({
         id: message.id,
+        sku: message.sku,
         name: message.name,
         description: message.description,
         imageBytes: new Uint8Array(message.imageBytes),

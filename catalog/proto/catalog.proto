@@ -2,16 +2,17 @@ syntax = "proto3";
 
 message CatalogItem {
   string id = 1;
-  string name = 2;
-  string description = 3;
-  bytes imageBytes = 4;
-  float price = 5;
-  float discount = 6;
-  float weight = 7;
-  int32 quantity = 8;
-  repeated string tags = 9;
-  uint64 createdAt = 10;
-  uint64 updatedAt = 11;
+  string sku = 2;
+  string name = 3;
+  string description = 4;
+  bytes imageBytes = 5;
+  float price = 6;
+  float discount = 7;
+  float weight = 8;
+  int32 quantity = 9;
+  repeated string tags = 10;
+  uint64 createdAt = 11;
+  uint64 updatedAt = 12;
 }
 
 message AddCatalogItemRequest {

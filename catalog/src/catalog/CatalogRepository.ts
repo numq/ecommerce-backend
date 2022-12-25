@@ -32,6 +32,7 @@ export class CatalogRepositoryImpl implements CatalogRepository {
             TE.fromTask(() => this.collection.insertOne({
                 _id: id,
                 id: id.toHexString(),
+                sku: item.sku,
                 name: item.name,
                 description: item.description,
                 imageBytes: item.imageBytes,
@@ -60,6 +61,7 @@ export class CatalogRepositoryImpl implements CatalogRepository {
         TE.fromTask(() => this.collection.updateOne({_id: ObjectId.createFromHexString(item.id)}, {
             $set: {
                 name: item.name,
+                sku: item.sku,
                 description: item.description,
                 imageBytes: item.imageBytes,
                 price: item.price,
