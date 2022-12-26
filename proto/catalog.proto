@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option go_package = ".";
+
 message CatalogItem {
   string id = 1;
   string sku = 2;
@@ -11,8 +13,8 @@ message CatalogItem {
   float weight = 8;
   int32 quantity = 9;
   repeated string tags = 10;
-  uint64 createdAt = 11;
-  uint64 updatedAt = 12;
+  int64 createdAt = 11;
+  int64 updatedAt = 12;
 }
 
 message AddCatalogItemRequest {
@@ -33,8 +35,8 @@ message GetCatalogItemByIdResponse {
 
 message GetCatalogItemsByTagsRequest {
   repeated string tags = 1;
-  int32 skip = 2;
-  int32 limit = 3;
+  int64 skip = 2;
+  int64 limit = 3;
 }
 
 message GetCatalogItemsByTagsResponse {

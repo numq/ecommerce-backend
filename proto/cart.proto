@@ -1,9 +1,11 @@
 syntax = "proto3";
 
+option go_package = ".";
+
 message Item {
   string id = 1;
   int32 quantity = 2;
-  uint64 addedAt = 3;
+  int64 addedAt = 3;
 }
 
 message GetCartRequest {
