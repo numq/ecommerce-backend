@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "npx rimraf ./src/generated && npx mkdirp ./src/generated && npx protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=./proto ./proto/*.proto",
-    "build-win": "npx rimraf ./src/generated && npx mkdirp ./src/generated && npx protoc --plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=./proto ./proto/*.proto",
+    "build": "npx rimraf ./src/generated && npx mkdirp ./src/generated && npx protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=../proto ../proto/*.proto",
+    "build-win": "npx rimraf ./src/generated && npx mkdirp ./src/generated && npx protoc --plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=../proto ../proto/*.proto",
     "start": "npm run build & ts-node src/index.ts",
     "debug": "ts-node src/index.ts",
     "test": "jest"
