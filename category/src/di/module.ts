@@ -14,6 +14,7 @@ import {GetCategoryById} from "../category/GetCategoryById";
 import {GetCategories} from "../category/GetCategories";
 import {UpdateCategory} from "../category/UpdateCategory";
 import {RemoveCategory} from "../category/RemoveCategory";
+import {GetCategoriesByTags} from "../category/GetCategoriesByTags";
 
 export namespace Module {
 
@@ -35,6 +36,7 @@ export namespace Module {
         bind<AddCategory>(Types.category.addCategory).to(AddCategory).inTransientScope();
         bind<GetCategoryById>(Types.category.getCategoryById).to(GetCategoryById).inTransientScope();
         bind<GetCategories>(Types.category.getCategories).to(GetCategories).inTransientScope();
+        bind<GetCategoriesByTags>(Types.category.getCategoriesByTags).to(GetCategoriesByTags).inTransientScope();
         bind<UpdateCategory>(Types.category.updateCategory).to(UpdateCategory).inTransientScope();
         bind<RemoveCategory>(Types.category.removeCategory).to(RemoveCategory).inTransientScope();
     });

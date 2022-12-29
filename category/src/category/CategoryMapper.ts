@@ -7,6 +7,7 @@ export namespace CategoryMapper {
         name: entity.name,
         description: entity.description,
         imageBytes: Buffer.from(entity.imageBytes),
+        tags: entity.tags,
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt
     });
@@ -15,6 +16,7 @@ export namespace CategoryMapper {
         name: message.name,
         description: message.description,
         imageBytes: new Uint8Array(message.imageBytes),
+        tags: message.tags,
         createdAt: message.createdAt,
         updatedAt: message.updatedAt
     });

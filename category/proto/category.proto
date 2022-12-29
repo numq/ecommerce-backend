@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package proto;
-
 option go_package = ".";
 
 message Category{
@@ -39,6 +37,16 @@ message GetCategoriesResponse {
   repeated Category categories = 1;
 }
 
+message GetCategoriesByTagsRequest {
+  repeated string tags = 1;
+  int64 skip = 2;
+  int64 limit = 3;
+}
+
+message GetCategoriesByTagsResponse {
+  repeated Category categories = 1;
+}
+
 message UpdateCategoryRequest {
   Category category = 1;
 }
@@ -59,6 +67,7 @@ service CategoryService {
   rpc addCategory(AddCategoryRequest) returns (AddCategoryResponse);
   rpc getCategoryById(GetCategoryByIdRequest) returns (GetCategoryByIdResponse);
   rpc getCategories(GetCategoriesRequest) returns (GetCategoriesResponse);
+  rpc getCategoriesByTags(GetCategoriesByTagsRequest) returns (GetCategoriesByTagsResponse);
   rpc updateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse);
   rpc removeCategory(RemoveCategoryRequest) returns (RemoveCategoryResponse);
 }

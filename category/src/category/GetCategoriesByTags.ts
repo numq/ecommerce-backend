@@ -1,6 +1,6 @@
 import {inject, injectable} from "inversify";
-import {Category} from "./Category";
 import {CategoryRepository} from "./CategoryRepository";
+import {Category} from "./Category";
 import {TaskEither} from "fp-ts/TaskEither";
 import {UseCase} from "../interactor/UseCase";
 import {Types} from "../di/types";
@@ -9,13 +9,13 @@ import {taskEither as TE} from "fp-ts";
 import {CategoryError} from "./CategoryError";
 
 @injectable()
-export class GetCategoryById extends UseCase<string, Category> {
+export class GetCategoriesByTags extends UseCase<[string[], number, number], Category[]> {
     constructor(@inject(Types.category.repository) private readonly repository: CategoryRepository) {
         super();
     }
 
-    execute = (arg: string): TaskEither<Error, Category> => pipe(
-        this.repository.getCategoryById(arg),
+    execute = (arg: [string[], number, number]): TaskEither<Error, Category[]> => pipe(
+        this.repository.getCategoriesByTags(...arg),
         TE.chain(TE.fromNullable(CategoryError.NotFound))
     );
 }
