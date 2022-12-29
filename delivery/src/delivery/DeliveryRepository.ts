@@ -29,8 +29,10 @@ export class DeliveryRepositoryImpl implements DeliveryRepository {
     }
 
     createDelivery = (delivery: Delivery): TaskEither<Error, string | null> => pipe(
-        TE.of(new ObjectId()),
-        TE.chain(id => TE.fromTask(() => this.collection.insertOne({
+        TE.Do,
+        TE.bind("id", () => TE.of(new ObjectId())),
+        TE.bind("timestamp", () => TE.of(new Date().getTime())),
+        TE.chain(({id, timestamp}) => TE.fromTask(() => this.collection.insertOne({
             _id: id,
             id: id.toHexString(),
             orderId: delivery.orderId,
@@ -39,7 +41,7 @@ export class DeliveryRepositoryImpl implements DeliveryRepository {
             items: delivery.items,
             address: delivery.address,
             courierId: delivery.courierId,
-            startedAt: delivery.startedAt,
+            startedAt: timestamp,
             deliveredBy: delivery.deliveredBy
         }))),
         TE.map(({insertedId}) => insertedId.toHexString())

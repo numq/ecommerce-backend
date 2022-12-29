@@ -4,6 +4,9 @@ import {Delivery} from "./Delivery";
 import {Types} from "../di/types";
 import {DeliveryRepository} from "./DeliveryRepository";
 import {TaskEither} from "fp-ts/TaskEither";
+import {pipe} from "fp-ts/function";
+import {taskEither as TE} from "fp-ts";
+import {DeliveryError} from "./DeliveryError";
 
 @injectable()
 export class GetDeliveriesByOrderId extends UseCase<[string, number, number], Delivery[]> {
@@ -11,5 +14,8 @@ export class GetDeliveriesByOrderId extends UseCase<[string, number, number], De
         super();
     }
 
-    execute = (arg: [string, number, number]): TaskEither<Error, Delivery[]> => this.repository.getDeliveriesByOrderId(...arg);
+    execute = (arg: [string, number, number]): TaskEither<Error, Delivery[]> => pipe(
+        this.repository.getDeliveriesByOrderId(...arg),
+        TE.chain(TE.fromNullable(DeliveryError.NotFound))
+    );
 }
