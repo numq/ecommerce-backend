@@ -5,24 +5,22 @@ import {Item} from "./Item";
 import {pipe} from "fp-ts/function";
 import {taskEither as TE} from "fp-ts";
 import {CacheError} from "../cache/CacheError";
-import {Cache} from "../cache/Cache";
 import * as A from "fp-ts/Array"
+import {Cache} from "../cache/Cache";
 
 
 export interface CartRepository {
     getItemsByCartId(cartId: string): TaskEither<Error, Item[]>
 
-    getItemById(cartId: string, itemId: string): TaskEither<Error, Item>
+    getItemById(cartId: string, itemId: string): TaskEither<Error, Item | null>
 
-    getItemByIdOrNull(cartId: string, itemId: string): TaskEither<Error, Item | null>
+    createItem(cartId: string, itemId: string): TaskEither<Error, string | null>
 
-    createItem(cartId: string, itemId: string): TaskEither<Error, number>
+    updateItem(cartId: string, item: Item): TaskEither<Error, Item | null>
 
-    updateItem(cartId: string, item: Item): TaskEither<Error, number>
+    removeItemById(cartId: string, itemId: string): TaskEither<Error, string | null>
 
-    removeItemById(cartId: string, itemId: string): TaskEither<Error, number>
-
-    removeItemsByCartId(cartId: string): TaskEither<Error, string>
+    removeItemsByCartId(cartId: string): TaskEither<Error, string | null>
 }
 
 @injectable()
@@ -30,94 +28,61 @@ export class CartRepositoryImpl implements CartRepository {
     constructor(@inject(Types.app.cache) private readonly cache: Cache) {
     }
 
-    getItemById = (cartId: string, itemId: string): TaskEither<Error, Item> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hGet(cartId, itemId), () => CacheError.get)),
-            TE.chain(TE.fromNullable(CacheError.get)),
-            TE.map(JSON.parse),
-            TE.map(({quantity, addedAt}) => ({
-                id: itemId,
-                quantity: quantity,
+    getItemById = (cartId: string, itemId: string): TaskEither<Error, Item | null> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.hGet(cartId, itemId))),
+        TE.chain(value => value ? TE.fromTask(JSON.parse(value)) : TE.of(null))
+    );
+
+    removeItemById = (cartId: string, itemId: string): TaskEither<Error, string | null> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.hDel(cartId, itemId))),
+        TE.map(count => count > 0 ? itemId : null)
+    );
+
+    createItem = (cartId: string, itemId: string): TaskEither<Error, string | null> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.hSet(cartId, itemId, JSON.stringify({
+            id: itemId,
+            quantity: 1,
+            addedAt: new Date().getTime()
+        })))),
+        TE.map(count => count > 0 ? itemId : null)
+    );
+
+    updateItem = (cartId: string, item: Item): TaskEither<Error, Item | null> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.hSet(cartId, item.id, JSON.stringify({
+            id: item.id,
+            quantity: item.quantity,
+            addedAt: item.addedAt
+        })))),
+        TE.map(count => count > 0 ? item : null)
+    );
+
+    getItemsByCartId = (cartId: string): TaskEither<Error, Item[]> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.hGetAll(cartId))),
+        TE.map(Object.entries),
+        TE.map(A.map(([key, value]) => {
+            const {quantity, addedAt} = JSON.parse(value);
+            return ({
+                id: key,
+                quantity: Number(quantity),
                 addedAt: addedAt
-            }))
-        );
-    }
+            });
+        }))
+    );
 
-    getItemByIdOrNull = (cartId: string, itemId: string): TaskEither<Error, Item | null> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hGet(cartId, itemId), () => CacheError.get)),
-            TE.chain(_ => _ ? pipe(
-                TE.of(_),
-                TE.map(JSON.parse),
-                TE.map(({quantity, addedAt}) => ({
-                    id: itemId,
-                    quantity: quantity,
-                    addedAt: addedAt
-                }))
-            ) : TE.right(null))
-        );
-    }
-
-
-    removeItemById = (cartId: string, itemId: string): TaskEither<Error, number> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hDel(cartId, itemId), () => CacheError.remove))
-        );
-    }
-
-    createItem = (cartId: string, itemId: string): TaskEither<Error, number> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hSet(cartId, itemId, JSON.stringify({
-                id: itemId,
-                quantity: 1,
-                addedAt: new Date().getTime()
-            })), () => CacheError.create))
-        );
-    }
-
-    updateItem = (cartId: string, item: Item): TaskEither<Error, number> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hSet(cartId, item.id, JSON.stringify({
-                id: item.id,
-                quantity: item.quantity,
-                addedAt: item.addedAt
-            })), () => CacheError.update))
-        );
-    }
-
-    getItemsByCartId = (cartId: string): TaskEither<Error, Item[]> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.hGetAll(cartId), () => CacheError.getAll)),
-            TE.map(Object.entries),
-            TE.map(A.map(([key, value]) => {
-                const {quantity, addedAt} = JSON.parse(value);
-                return {
-                    id: key,
-                    quantity: Number(quantity),
-                    addedAt: addedAt
-                };
-            }))
-        );
-    }
-
-    removeItemsByCartId = (cartId: string): TaskEither<Error, string> => {
-        return pipe(
-            this.cache.client,
-            TE.fromNullable(CacheError.client),
-            TE.chain(client => TE.tryCatch(() => client.del(cartId), () => CacheError.removeAll)),
-            TE.map(() => cartId)
-        );
-    }
+    removeItemsByCartId = (cartId: string): TaskEither<Error, string | null> => pipe(
+        this.cache.client,
+        TE.fromNullable(CacheError.client),
+        TE.chain(client => TE.fromTask(() => client.del(cartId))),
+        TE.map(count => count > 0 ? cartId : null)
+    );
 }
