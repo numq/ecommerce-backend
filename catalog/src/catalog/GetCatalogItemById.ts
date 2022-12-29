@@ -4,6 +4,9 @@ import {CatalogItem} from "./CatalogItem";
 import {Types} from "../di/types";
 import {CatalogRepository} from "./CatalogRepository";
 import {TaskEither} from "fp-ts/TaskEither";
+import {pipe} from "fp-ts/function";
+import {taskEither as TE} from "fp-ts";
+import {CatalogError} from "./CatalogError";
 
 @injectable()
 export class GetCatalogItemById extends UseCase<string, CatalogItem> {
@@ -11,7 +14,8 @@ export class GetCatalogItemById extends UseCase<string, CatalogItem> {
         super();
     }
 
-    execute(arg: string): TaskEither<Error, CatalogItem> {
-        return this.repository.getItemById(arg);
-    }
+    execute = (arg: string): TaskEither<Error, CatalogItem> => pipe(
+        this.repository.getItemById(arg),
+        TE.chain(TE.fromNullable(CatalogError.NotFound))
+    );
 }

@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from "@grpc/grpc-js";
+import {sendUnaryData, ServerUnaryCall, status, UntypedHandleCall} from "@grpc/grpc-js";
 import {Types} from "../di/types";
 import {AddCatalogItem} from "./AddCatalogItem";
 import {GetCatalogItemById} from "./GetCatalogItemById";
@@ -38,29 +38,40 @@ export class CatalogService implements CatalogServiceServer {
     addCatalogItem = (call: ServerUnaryCall<AddCatalogItemRequest, AddCatalogItemResponse>, callback: sendUnaryData<AddCatalogItemResponse>) => {
         const {item} = call.request;
         if (item) {
-            response(this.addCatalogItemUseCase.execute(CatalogItemMapper.messageToEntity(item)), callback, value => ({id: value}));
+            return response(this.addCatalogItemUseCase.execute(CatalogItemMapper.messageToEntity(item)), callback, value => ({id: value}));
         }
-    }
+        return callback({code: status.INVALID_ARGUMENT});
+    };
 
     getCatalogItemById = (call: ServerUnaryCall<GetCatalogItemByIdRequest, GetCatalogItemByIdResponse>, callback: sendUnaryData<GetCatalogItemByIdResponse>) => {
         const {id} = call.request;
-        response(this.getCatalogItemByIdUseCase.execute(id), callback, value => ({item: CatalogItemMapper.entityToMessage(value)}));
-    }
+        if (id) {
+            return response(this.getCatalogItemByIdUseCase.execute(id), callback, value => ({item: CatalogItemMapper.entityToMessage(value)}));
+        }
+        return callback({code: status.INVALID_ARGUMENT});
+    };
 
     getCatalogItemsByTags = (call: ServerUnaryCall<GetCatalogItemsByTagsRequest, GetCatalogItemsByTagsResponse>, callback: sendUnaryData<GetCatalogItemsByTagsResponse>) => {
         const {tags, skip, limit} = call.request;
-        response(this.getCatalogItemsByTagsUseCase.execute([tags, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
-    }
+        if (tags && skip && limit) {
+            return response(this.getCatalogItemsByTagsUseCase.execute([tags, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
+        }
+        return callback({code: status.INVALID_ARGUMENT});
+    };
 
     removeCatalogItem = (call: ServerUnaryCall<RemoveCatalogItemRequest, RemoveCatalogItemResponse>, callback: sendUnaryData<RemoveCatalogItemResponse>) => {
         const {id} = call.request;
-        response(this.removeCatalogItemUseCase.execute(id), callback, value => ({id: value}));
-    }
+        if (id) {
+            return response(this.removeCatalogItemUseCase.execute(id), callback, value => ({id: value}));
+        }
+        return callback({code: status.INVALID_ARGUMENT});
+    };
 
     updateCatalogItem = (call: ServerUnaryCall<UpdateCatalogItemRequest, UpdateCatalogItemResponse>, callback: sendUnaryData<UpdateCatalogItemResponse>) => {
         const {item} = call.request;
         if (item) {
-            response(this.updateCatalogItemUseCase.execute(item), callback, value => ({item: CatalogItemMapper.entityToMessage(value)}));
+            return response(this.updateCatalogItemUseCase.execute(item), callback, value => ({item: CatalogItemMapper.entityToMessage(value)}));
         }
-    }
+        return callback({code: status.INVALID_ARGUMENT});
+    };
 }
