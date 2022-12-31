@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package order;
+
+enum OrderStatus {
+  CREATED = 0;
+  PENDING_PAYMENT = 1;
+  PROCESSING = 2;
+  SHIPPING = 3;
+  COMPLETED = 4;
+  CANCELED = 5;
+  REFUNDED = 6;
+}
+
+message Order{
+  string id = 1;
+  string customerId = 2;
+  repeated OrderedItem items = 3;
+  string discount = 4;
+  string price = 5;
+  OrderStatus status = 6;
+  int64 creationDate = 7;
+  int64 deliveryDate = 8;
+}
+
+message OrderedItem{
+  string id = 1;
+  string sku = 2;
+  string name = 3;
+  string quantity = 4;
+  string discount = 5;
+  string price = 6;
+}
+
+message CreateOrderRequest {
+  Order order = 1;
+}
+
+message CreateOrderResponse {
+  string id = 1;
+}
+
+message GetOrderByIdRequest {
+  string id = 1;
+}
+
+message GetOrderByIdResponse {
+  Order order = 1;
+}
+
+message GetCustomerOrdersRequest {
+  string customerId = 1;
+}
+
+message GetCustomerOrdersResponse {
+  repeated Order orders = 1;
+}
+
+message UpdateOrderRequest {
+  Order order = 1;
+}
+
+message UpdateOrderResponse {
+  Order order = 1;
+}
+
+message DeleteOrderRequest {
+  string id = 1;
+}
+
+message DeleteOrderResponse {
+  string id = 1;
+}
+
+service OrderService {
+  rpc createOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc getOrderById(GetOrderByIdRequest) returns (GetOrderByIdResponse);
+  rpc getCustomerOrders(GetCustomerOrdersRequest) returns (GetCustomerOrdersResponse);
+  rpc updateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  rpc deleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse);
+}

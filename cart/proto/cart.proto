@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = ".";
+package cart;
 
 message Item {
   string id = 1;

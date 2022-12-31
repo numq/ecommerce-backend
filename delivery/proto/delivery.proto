@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = ".";
+package delivery;
 
 enum DeliveryStatus {
   STARTED = 0;

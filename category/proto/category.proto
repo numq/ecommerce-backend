@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = ".";
+package category;
 
 message Category{
   string id = 1;
