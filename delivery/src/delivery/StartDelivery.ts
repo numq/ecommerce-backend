@@ -17,7 +17,7 @@ export class StartDelivery extends UseCase<Delivery, Delivery> {
     execute = (arg: Delivery): TaskEither<Error, Delivery> => pipe(
         this.repository.createDelivery(arg),
         TE.chain(TE.fromNullable(DeliveryError.NotFound)),
-        TE.chain(id => this.repository.getDeliveryById(id)),
+        TE.chain(this.repository.getDeliveryById),
         TE.chain(TE.fromNullable(DeliveryError.NotFound))
     );
 }
