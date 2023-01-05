@@ -2,8 +2,6 @@ package token
 
 import (
 	"context"
-	"strconv"
-	"time"
 )
 
 type UseCase interface {
@@ -33,13 +31,5 @@ func (u UseCaseImpl) RevokeToken(ctx context.Context, token string) (*string, er
 	if err != nil {
 		return nil, err
 	}
-	issuedAt, err := strconv.Atoi(claims.IssuedAt)
-	if err != nil {
-		return nil, err
-	}
-	expirationTime, err := strconv.Atoi(claims.ExpirationTime)
-	if err != nil {
-		return nil, err
-	}
-	return u.repository.RevokeToken(ctx, token, time.UnixMilli(int64(issuedAt+expirationTime)).String())
+	return u.repository.RevokeToken(ctx, token, claims.ExpirationTime)
 }

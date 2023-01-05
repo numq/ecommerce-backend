@@ -2,6 +2,6 @@ package token
 
 type Claims struct {
 	Payload        string
-	IssuedAt       string
-	ExpirationTime string
+	IssuedAt       int64
+	ExpirationTime int64
 }

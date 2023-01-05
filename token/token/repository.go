@@ -12,7 +12,7 @@ import (
 type Repository interface {
 	GenerateTokenPair(ctx context.Context, id string) (*Pair, error)
 	VerifyToken(ctx context.Context, tokenString string) (*Claims, error)
-	RevokeToken(ctx context.Context, token string, expirationTimestamp string) (*string, error)
+	RevokeToken(ctx context.Context, token string, expirationTimestamp int64) (*string, error)
 }
 
 type RepositoryImpl struct {
@@ -25,17 +25,18 @@ func NewRepository(config config.Config, client *redis.Client) Repository {
 }
 
 func (r RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) (*Pair, error) {
+	timestamp := time.Now().Unix()
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"payload": payload,
-		"iat":     time.Now(),
-		"exp":     time.Minute * 30,
+		"iat":     timestamp,
+		"exp":     timestamp + (time.Minute * 30).Milliseconds(),
 	}).SignedString([]byte(r.config.SecretKey))
 	if err != nil {
 		return nil, err
 	}
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iat": time.Now(),
-		"exp": time.Hour * 24 * 30,
+		"iat": timestamp,
+		"exp": timestamp + (time.Hour * 24 * 30).Milliseconds(),
 	}).SignedString([]byte(r.config.SecretKey))
 	if err != nil {
 		return nil, err
@@ -54,17 +55,16 @@ func (r RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims,
 		}
 		if parsedToken.Valid {
 			payload := claims["payload"].(string)
-			iat := claims["iat"].(string)
-			exp := claims["exp"].(string)
-			return &Claims{Payload: payload, IssuedAt: iat, ExpirationTime: exp}, err
+			iat := claims["iat"].(float64)
+			exp := claims["exp"].(float64)
+			return &Claims{Payload: payload, IssuedAt: int64(iat), ExpirationTime: int64(exp)}, err
 		}
 	}
 	return nil, fmt.Errorf("invalid token")
 }
 
-func (r RepositoryImpl) RevokeToken(ctx context.Context, token string, expirationTimestamp string) (*string, error) {
-	expiresAt, err := time.ParseDuration(expirationTimestamp)
-	revokedToken := r.client.Set(ctx, token, token, expiresAt)
+func (r RepositoryImpl) RevokeToken(ctx context.Context, token string, expirationTimestamp int64) (*string, error) {
+	revokedToken := r.client.Set(ctx, token, token, time.Duration(expirationTimestamp-time.Now().Unix()))
 	value, err := revokedToken.Val(), revokedToken.Err()
 	return &value, err
 }
