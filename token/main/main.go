@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
-	"github.com/go-redis/redis/v9"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -13,12 +13,24 @@ import (
 	"token/config"
 	pb "token/generated"
 	"token/server"
+	"token/store"
 	"token/token"
 )
 
 func main() {
-	cfg, _ := config.LoadConfig(".")
-	if cfg.Debug {
+	productionMode := flag.Bool("production", false, "enable production mode")
+	flag.Parse()
+	cfgName := func() string {
+		if *productionMode {
+			return "prod"
+		}
+		return "dev"
+	}()
+	cfg, err := config.LoadConfig(cfgName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !*productionMode {
 		if err := os.RemoveAll("./generated"); err != nil {
 			log.Fatal(err)
 		}
@@ -29,17 +41,9 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-	redisClient := redis.NewClient(&redis.Options{Addr: fmt.Sprintf("%s:%s", cfg.RedisHostname, cfg.RedisPort)})
-	if _, err := redisClient.Ping(context.Background()).Result(); err != nil {
-		log.Fatal(err)
-	}
-	defer func(redisClient *redis.Client) {
-		err := redisClient.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(redisClient)
-	accountRepository := token.NewRepository(cfg, redisClient)
+	ctx := context.Background()
+	client := store.NewClient(ctx, fmt.Sprintf("%s:%s", cfg.RedisHostname, cfg.RedisPort))
+	accountRepository := token.NewRepository(cfg, client)
 	accountUseCase := token.NewUseCase(accountRepository)
 	accountService := token.NewService(accountUseCase)
 	authInterceptor := server.NewInterceptor("Authorization", func(header string) error {

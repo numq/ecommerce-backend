@@ -6,7 +6,6 @@ import (
 )
 
 type Config struct {
-	Debug         bool   `mapstructure:"DEBUG"`
 	ServiceName   string `mapstructure:"SERVICE_NAME"`
 	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
 	RedisHostname string `mapstructure:"REDIS_HOSTNAME"`
@@ -15,10 +14,11 @@ type Config struct {
 	SecretKey     string `mapstructure:"SECRET_KEY"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
-	viper.AddConfigPath(path)
+func LoadConfig(name string) (config Config, err error) {
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config")
 	viper.SetConfigType("env")
-	viper.SetConfigFile(".env")
+	viper.SetConfigName(name)
 	if err = viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}
