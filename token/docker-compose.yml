@@ -1,0 +1,15 @@
+services:
+  application:
+    build: .
+    depends_on:
+      - redis
+    volumes:
+      - ./:/data
+    restart: always
+    ports:
+      - '8081:8081'
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
