@@ -3,7 +3,7 @@ package account
 import "context"
 
 type UseCase interface {
-	CreateAccount(ctx context.Context, role Role) (*string, error)
+	CreateAccount(ctx context.Context, phoneNumber string, role Role) (*string, error)
 	GetAccountById(ctx context.Context, id string) (*Account, error)
 	GetAccountByPhoneNumber(ctx context.Context, phoneNumber string) (*Account, error)
 	GetAccountsByRole(ctx context.Context, role Role, skip int64, limit int64) ([]*Account, error)
@@ -20,8 +20,8 @@ func NewUseCase(repository Repository) UseCase {
 	return UseCaseImpl{repository: repository}
 }
 
-func (u UseCaseImpl) CreateAccount(ctx context.Context, role Role) (*string, error) {
-	return u.repository.CreateAccount(ctx, role)
+func (u UseCaseImpl) CreateAccount(ctx context.Context, phoneNumber string, role Role) (*string, error) {
+	return u.repository.CreateAccount(ctx, phoneNumber, role)
 }
 
 func (u UseCaseImpl) GetAccountById(ctx context.Context, id string) (*Account, error) {

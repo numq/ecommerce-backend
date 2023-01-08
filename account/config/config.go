@@ -6,21 +6,20 @@ import (
 )
 
 type Config struct {
-	ServiceName      string `mapstructure:"SERVICE_NAME"`
-	DatabaseHost     string `mapstructure:"DATABASE_HOST"`
-	DatabaseHostname string `mapstructure:"DATABASE_HOSTNAME"`
-	DatabasePort     string `mapstructure:"DATABASE_PORT"`
-	DatabaseName     string `mapstructure:"DATABASE_NAME"`
-	CollectionItems  string `mapstructure:"COLLECTION_ITEMS"`
-	ServerAddress    string `mapstructure:"SERVER_ADDRESS"`
-	ApiKey           string `mapstructure:"API_KEY"`
+	ServiceName     string `mapstructure:"SERVICE_NAME"`
+	ServerAddress   string `mapstructure:"SERVER_ADDRESS"`
+	MongoHostname   string `mapstructure:"MONGO_HOSTNAME"`
+	MongoPort       string `mapstructure:"MONGO_PORT"`
+	DatabaseName    string `mapstructure:"DATABASE_NAME"`
+	CollectionItems string `mapstructure:"COLLECTION_ITEMS"`
+	ApiKey          string `mapstructure:"API_KEY"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
-	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+func LoadConfig(name string) (config Config, err error) {
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config")
 	viper.SetConfigType("env")
-	viper.AutomaticEnv()
+	viper.SetConfigName(name)
 	if err = viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}

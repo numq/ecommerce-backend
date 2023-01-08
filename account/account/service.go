@@ -27,7 +27,7 @@ func (s ServiceImpl) CreateAccount(ctx context.Context, request *pb.CreateAccoun
 	if reqRole.String() == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
 	}
-	id, err := s.useCase.CreateAccount(ctx, Role(reqRole))
+	id, err := s.useCase.CreateAccount(ctx, reqPhoneNumber, Role(reqRole))
 	if err != nil {
 		return nil, err
 	}
