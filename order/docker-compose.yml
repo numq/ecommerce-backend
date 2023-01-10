@@ -2,17 +2,17 @@ version: "3"
 services:
   application:
     build: .
-    command: npm start
-    environment:
-      - DATABASE_HOSTNAME=mongodb
     depends_on:
       - mongo
+    environment:
+      - MONGO_HOSTNAME=mongodb
     volumes:
       - ./:/data
+    restart: always
     ports:
-      - '8080:8080'
+      - '8004:8004'
   mongo:
     image: mongo:latest
-    restart: on-failure
+    restart: always
     ports:
       - '27017:27017'

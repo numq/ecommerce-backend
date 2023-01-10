@@ -3,7 +3,7 @@ import {Container, ContainerModule} from "inversify";
 import {Config} from "../config/Config";
 import {Types} from "./types";
 import {Server} from "../server/Server";
-import {Cache} from "../cache/Cache";
+import {Store} from "../store/Store";
 import {CartService} from "../cart/CartService";
 import {CartRepository, CartRepositoryImpl} from "../cart/CartRepository";
 import {GetCart} from "../cart/GetCart";
@@ -19,7 +19,7 @@ export namespace Module {
 
     const app = new ContainerModule(bind => {
         bind<Config>(Types.app.config).to(Config).inSingletonScope();
-        bind<Cache>(Types.app.cache).to(Cache).inSingletonScope();
+        bind<Store>(Types.app.store).to(Store).inSingletonScope();
         bind<Server>(Types.app.server).to(Server).inSingletonScope();
     });
 

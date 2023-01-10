@@ -1,8 +1,8 @@
 export namespace Types {
     export const app = {
-        config: Symbol.for("appConfig"),
-        database: Symbol.for("appDatabase"),
-        server: Symbol.for("appServer")
+        config: Symbol.for("config"),
+        database: Symbol.for("database"),
+        server: Symbol.for("server")
     };
     export const order = {
         collection: Symbol.for("orderCollection"),

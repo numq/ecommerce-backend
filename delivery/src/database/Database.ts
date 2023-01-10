@@ -10,13 +10,13 @@ export class Database {
     constructor(@inject(Types.app.config) private readonly config: Config) {
     }
 
-    open = async () => new MongoClient(this.config.DATABASE_URL).connect().then(client => {
+    open = async () => new MongoClient(this.config.MONGO_URL).connect().then(client => {
         this.client = client;
-        console.log(`Connected to database: ${this.config.DATABASE_URL}`);
+        console.log(`Connected to database: ${this.config.MONGO_URL}`);
     }).catch(console.error);
 
     close = () => this.client?.close().then(() => {
-        console.log(`Disconnected from database: ${this.config.DATABASE_URL}`);
+        console.log(`Disconnected from database: ${this.config.MONGO_URL}`);
         this.client = null;
     }).catch(console.error);
 

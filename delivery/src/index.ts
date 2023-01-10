@@ -4,7 +4,7 @@ import {Server} from "./server/Server";
 import * as dotenv from "dotenv";
 import {DeliveryServiceServer, DeliveryServiceService} from "./generated/delivery";
 import {Database} from "./database/Database";
-import {createApplication} from "./app/index.js";
+import {createApplication} from "./app";
 
 const initialize = async () => {
     dotenv.config();

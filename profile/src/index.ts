@@ -3,7 +3,7 @@ import {Types} from "./di/types";
 import {Server} from "./server/Server";
 import * as dotenv from "dotenv";
 import {Database} from "./database/Database";
-import {createApplication} from "./app/index.js";
+import {createApplication} from "./app";
 import {ProfileServiceServer, ProfileServiceService} from "./generated/profile";
 
 const initialize = async () => {

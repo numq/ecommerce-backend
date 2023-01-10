@@ -1,14 +1,17 @@
 version: "3"
 services:
-  catalog:
+  application:
     build: .
-    command: npm start
-    restart: always
+    depends_on:
+      - mongo
     environment:
-      - DATABASE_HOSTNAME=mongodb
+      - MONGO_HOSTNAME=mongodb
+    volumes:
+      - ./:/data
+    restart: always
     ports:
-      - "8002:8002"
-  mongodb:
+      - '8002:8002'
+  mongo:
     image: mongo:latest
     restart: always
     ports:
