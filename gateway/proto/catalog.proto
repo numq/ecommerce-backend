@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package catalog;
+
+option go_package = ".";
+
+message CatalogItem {
+  string id = 1;
+  string sku = 2;
+  string name = 3;
+  string description = 4;
+  bytes imageBytes = 5;
+  float price = 6;
+  float discount = 7;
+  float weight = 8;
+  int32 quantity = 9;
+  repeated string tags = 10;
+  int64 createdAt = 11;
+  int64 updatedAt = 12;
+}
+
+message AddCatalogItemRequest {
+  CatalogItem item = 1;
+}
+
+message AddCatalogItemResponse {
+  string id = 1;
+}
+
+message GetCatalogItemByIdRequest {
+  string id = 1;
+}
+
+message GetCatalogItemByIdResponse {
+  CatalogItem item = 1;
+}
+
+message GetCatalogItemsByTagsRequest {
+  repeated string tags = 1;
+  int64 skip = 2;
+  int64 limit = 3;
+}
+
+message GetCatalogItemsByTagsResponse {
+  repeated CatalogItem items = 1;
+}
+
+message UpdateCatalogItemRequest {
+  CatalogItem item = 1;
+}
+
+message UpdateCatalogItemResponse {
+  CatalogItem item = 1;
+}
+
+message RemoveCatalogItemRequest {
+  string id = 1;
+}
+
+message RemoveCatalogItemResponse {
+  string id = 1;
+}
+
+service CatalogService {
+  rpc addCatalogItem(AddCatalogItemRequest) returns (AddCatalogItemResponse);
+  rpc getCatalogItemById(GetCatalogItemByIdRequest) returns (GetCatalogItemByIdResponse);
+  rpc getCatalogItemsByTags(GetCatalogItemsByTagsRequest) returns (GetCatalogItemsByTagsResponse);
+  rpc updateCatalogItem(UpdateCatalogItemRequest) returns (UpdateCatalogItemResponse);
+  rpc removeCatalogItem(RemoveCatalogItemRequest) returns (RemoveCatalogItemResponse);
+}

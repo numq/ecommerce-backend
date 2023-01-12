@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package authentication;
+
+option go_package = ".";
+
+message SignInByPhoneNumberRequest {
+  string phoneNumber = 1;
+}
+
+message SignInByPhoneNumberResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message SignOutRequest {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message SignOutResponse {
+}
+
+message VerifyAccessRequest {
+  string accessToken = 1;
+}
+
+message VerifyAccessResponse {
+  string payload = 1;
+}
+
+message RefreshTokenRequest {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message RefreshTokenResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+service AuthenticationService {
+  rpc SignInByPhoneNumber(SignInByPhoneNumberRequest) returns (SignInByPhoneNumberResponse);
+  rpc SignOut(SignOutRequest) returns (SignOutResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc VerifyAccess(VerifyAccessRequest) returns (VerifyAccessResponse);
+}
