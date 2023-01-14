@@ -1,0 +1,18 @@
+version: "3"
+services:
+  application:
+    build: .
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOSTNAME=redis
+    volumes:
+      - ./:/data
+    restart: always
+    ports:
+      - '8003:8003'
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
