@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func NewInterceptor(name string, callback func(string) error) grpc.ServerOption {
+func NewInterceptor(name string, callback func(ctx context.Context, header string) error) grpc.ServerOption {
 	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
@@ -18,7 +18,7 @@ func NewInterceptor(name string, callback func(string) error) grpc.ServerOption 
 		if len(header) < 1 {
 			return nil, status.Errorf(codes.InvalidArgument, "Error reading header")
 		}
-		if err := callback(header[0]); err != nil {
+		if err := callback(ctx, header[0]); err != nil {
 			return nil, status.Errorf(codes.Internal, "Error processing header")
 		}
 		return handler(ctx, req)
