@@ -5,11 +5,11 @@ services:
       - redis
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8083:8083'
   redis:
     image: redis:latest
-    restart: always
+    restart: on-failure
     ports:
       - '6379:6379'

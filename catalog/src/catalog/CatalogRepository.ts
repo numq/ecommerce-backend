@@ -5,6 +5,8 @@ import {Types} from "../di/types";
 import {taskEither as TE} from "fp-ts";
 import {pipe} from "fp-ts/function";
 import {TaskEither} from "fp-ts/TaskEither";
+import {Channel} from "amqplib";
+import {Buffer} from "buffer";
 
 
 export interface CatalogRepository {
@@ -22,7 +24,10 @@ export interface CatalogRepository {
 @injectable()
 export class CatalogRepositoryImpl implements CatalogRepository {
 
-    constructor(@inject(Types.catalog.collection) private readonly collection: Collection<CatalogItem>) {
+    constructor(
+        @inject(Types.catalog.channel) private readonly channel: Channel,
+        @inject(Types.catalog.collection) private readonly collection: Collection<CatalogItem>
+    ) {
     }
 
     addItem = (item: CatalogItem): TaskEither<Error, string | null> => pipe(
@@ -44,7 +49,9 @@ export class CatalogRepositoryImpl implements CatalogRepository {
             createdAt: timestamp,
             updatedAt: timestamp
         }))),
-        TE.map(({insertedId}) => insertedId.toHexString())
+        TE.chain(({insertedId}) => TE.fromTask(() => this.collection.findOne({id: insertedId.toHexString()}))),
+        TE.chain(result => TE.of(result ? this.channel.sendToQueue("added", Buffer.from(JSON.stringify(result))) : false)),
+        TE.map(() => item.id)
     );
 
     getItemById = (id: string): TaskEither<Error, CatalogItem | null> => pipe(
@@ -62,6 +69,7 @@ export class CatalogRepositoryImpl implements CatalogRepository {
 
     removeItem = (id: string): TaskEither<Error, string | null> => pipe(
         TE.fromTask(() => this.collection.findOneAndDelete({id: id})),
+        TE.chainFirst(result => TE.of(this.channel.sendToQueue("removed", Buffer.from(JSON.stringify(result))))),
         TE.map(({value}) => value ? id : null)
     );
 }

@@ -8,11 +8,11 @@ services:
       - REDIS_HOSTNAME=redis
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8003:8003'
   redis:
     image: redis:latest
-    restart: always
+    restart: on-failure
     ports:
       - '6379:6379'

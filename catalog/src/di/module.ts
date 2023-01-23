@@ -14,6 +14,8 @@ import {CatalogServiceServer} from "../generated/catalog";
 import {CatalogService} from "../catalog/CatalogService";
 import {GetCatalogItemsByTags} from "../catalog/GetCatalogItemsByTags";
 import {CatalogItem} from "../catalog/CatalogItem";
+import {MessageQueue} from "../amqp/MessageQueue";
+import {Channel} from "amqplib";
 
 export namespace Module {
 
@@ -22,11 +24,15 @@ export namespace Module {
 
     const app = new ContainerModule(bind => {
         bind<Config>(Types.app.config).to(Config).inSingletonScope();
-        bind<Database>(Types.app.database).to(Database).inSingletonScope();
+        bind<Database>(Types.app.database).to(Database).inSingletonScope().onDeactivation(db => db.close());
         bind<Server>(Types.app.server).to(Server).inSingletonScope();
+        bind<MessageQueue>(Types.app.messageQueue).to(MessageQueue).inSingletonScope();
     });
 
     const catalog = new ContainerModule(bind => {
+        bind<Channel>(Types.catalog.channel).toDynamicValue(() => {
+            return container.get<MessageQueue>(Types.app.messageQueue).useChannel(container.get<Config>(Types.app.config).AMQP_CHANNEL_CATALOG!!)!!;
+        }).inSingletonScope();
         bind<Collection<CatalogItem>>(Types.catalog.collection).toDynamicValue(() => {
             return container.get<Database>(Types.app.database).collection<CatalogItem>(container.get<Config>(Types.app.config).COLLECTION_ITEMS!)!;
         }).inSingletonScope();

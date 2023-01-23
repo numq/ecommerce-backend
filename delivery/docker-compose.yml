@@ -8,11 +8,11 @@ services:
       - MONGO_HOSTNAME=mongodb
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8005:8005'
   mongo:
     image: mongo:latest
-    restart: always
+    restart: on-failure
     ports:
       - '27017:27017'

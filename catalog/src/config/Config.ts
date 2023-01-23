@@ -6,4 +6,6 @@ export class Config {
     readonly SERVER_URL = `${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}`;
     readonly DATABASE_NAME = process.env.DATABASE_NAME;
     readonly COLLECTION_ITEMS = process.env.COLLECTION_ITEMS;
+    readonly AMQP_URL = `amqp://${process.env.AMQP_HOSTNAME}:${process.env.AMQP_PORT}`;
+    readonly AMQP_CHANNEL_CATALOG = process.env.AMQP_CHANNEL_CATALOG;
 }

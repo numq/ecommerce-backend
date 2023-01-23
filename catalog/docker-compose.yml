@@ -6,13 +6,19 @@ services:
       - mongo
     environment:
       - MONGO_HOSTNAME=mongodb
+      - RABBITMQ_HOSTNAME=rabbitmq
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8002:8002'
   mongo:
     image: mongo:latest
-    restart: always
+    restart: on-failure
     ports:
       - '27017:27017'
+  rabbitmq:
+    image: rabbitmq:latest
+    restart: on-failure
+    ports:
+      - '5672:5672'

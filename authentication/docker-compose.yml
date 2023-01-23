@@ -6,16 +6,16 @@ services:
       - mongo
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8081:8081'
   redis:
     image: redis:latest
-    restart: always
+    restart: on-failure
     ports:
       - '6379:6379'
   mongo:
     image: mongo:latest
-    restart: always
+    restart: on-failure
     ports:
       - '27017:27017'

@@ -3,6 +3,6 @@ services:
     build: .
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8000:8000'

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.7.3",
+    "@types/amqplib": "^0.10.1",
+    "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "fp-ts": "^2.13.1",
     "inversify": "^6.0.1",

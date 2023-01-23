@@ -2,9 +2,11 @@ export namespace Types {
     export const app = {
         config: Symbol.for("config"),
         database: Symbol.for("database"),
-        server: Symbol.for("server")
+        server: Symbol.for("server"),
+        messageQueue: Symbol.for("messageQueue")
     };
     export const catalog = {
+        channel: Symbol.for("catalogChannel"),
         collection: Symbol.for("catalogCollection"),
         repository: Symbol.for("catalogRepository"),
         service: Symbol.for("catalogService"),

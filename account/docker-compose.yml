@@ -5,11 +5,11 @@ services:
       - mongo
     volumes:
       - ./:/data
-    restart: always
+    restart: on-failure
     ports:
       - '8082:8082'
   mongo:
     image: mongo:latest
-    restart: always
+    restart: on-failure
     ports:
       - '27017:27017'
