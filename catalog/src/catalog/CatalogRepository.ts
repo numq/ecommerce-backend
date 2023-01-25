@@ -50,7 +50,7 @@ export class CatalogRepositoryImpl implements CatalogRepository {
             updatedAt: timestamp
         }))),
         TE.chain(({insertedId}) => TE.fromTask(() => this.collection.findOne({id: insertedId.toHexString()}))),
-        TE.chain(result => TE.of(result ? this.channel.sendToQueue("added", Buffer.from(JSON.stringify(result))) : false)),
+        TE.chain(result => TE.of(result ? this.channel.sendToQueue("add", Buffer.from(JSON.stringify(result))) : false)),
         TE.map(() => item.id)
     );
 
@@ -64,12 +64,13 @@ export class CatalogRepositoryImpl implements CatalogRepository {
 
     updateItem = (item: CatalogItem): TaskEither<Error, CatalogItem | null> => pipe(
         TE.fromTask(() => this.collection.findOneAndUpdate({id: item.id}, item)),
+        TE.chainFirst(({value}) => TE.of(value ? this.channel.sendToQueue("update", Buffer.from(JSON.stringify(value))) : false)),
         TE.map(({value}) => value)
     );
 
     removeItem = (id: string): TaskEither<Error, string | null> => pipe(
         TE.fromTask(() => this.collection.findOneAndDelete({id: id})),
-        TE.chainFirst(result => TE.of(this.channel.sendToQueue("removed", Buffer.from(JSON.stringify(result))))),
+        TE.chainFirst(result => TE.of(this.channel.sendToQueue("delete", Buffer.from(JSON.stringify(result))))),
         TE.map(({value}) => value ? id : null)
     );
 }
