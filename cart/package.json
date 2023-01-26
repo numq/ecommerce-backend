@@ -13,7 +13,6 @@
     "dotenv": "^16.0.3",
     "fp-ts": "^2.13.1",
     "inversify": "^6.0.1",
-    "mongodb": "^4.11.0",
     "redis": "^4.4.0",
     "reflect-metadata": "^0.1.13"
   },
