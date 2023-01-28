@@ -20,10 +20,10 @@ type RepositoryImpl struct {
 }
 
 func NewRepository(client *elasticsearch.Client) Repository {
-	return RepositoryImpl{client}
+	return &RepositoryImpl{client}
 }
 
-func (r RepositoryImpl) Search(ctx context.Context, query string) ([]*Item, error) {
+func (r *RepositoryImpl) Search(ctx context.Context, query string) ([]*Item, error) {
 	result, err := r.client.Search(
 		r.client.Search.WithContext(ctx),
 		r.client.Search.WithIndex("catalog"),
@@ -59,7 +59,7 @@ func (r RepositoryImpl) Search(ctx context.Context, query string) ([]*Item, erro
 	return nil, nil
 }
 
-func (r RepositoryImpl) Insert(ctx context.Context, item Item) (*string, error) {
+func (r *RepositoryImpl) Insert(ctx context.Context, item Item) (*string, error) {
 	body, err := json.Marshal(item)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (r RepositoryImpl) Insert(ctx context.Context, item Item) (*string, error) 
 	return &item.Id, nil
 }
 
-func (r RepositoryImpl) Update(ctx context.Context, item Item) (*string, error) {
+func (r *RepositoryImpl) Update(ctx context.Context, item Item) (*string, error) {
 	body, err := json.Marshal(item)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (r RepositoryImpl) Update(ctx context.Context, item Item) (*string, error) 
 	return &item.Id, nil
 }
 
-func (r RepositoryImpl) Remove(ctx context.Context, id string) (*string, error) {
+func (r *RepositoryImpl) Remove(ctx context.Context, id string) (*string, error) {
 	if _, err := r.client.Delete("catalog", id, r.client.Delete.WithContext(ctx)); err != nil {
 		return nil, err
 	}

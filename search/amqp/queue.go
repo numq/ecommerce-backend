@@ -24,14 +24,14 @@ func NewClient(address string) Queue {
 	}
 }
 
-func (m Queue) Disconnect() {
+func (m *Queue) Disconnect() {
 	if err := m.connection.Close(); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Disconnected from message queue: %s\n", m.connection.RemoteAddr())
 }
 
-func (m Queue) OpenChannel(name string) {
+func (m *Queue) OpenChannel(name string) {
 	channel, err := m.connection.Channel()
 	if err != nil {
 		log.Fatal(err)
@@ -39,14 +39,14 @@ func (m Queue) OpenChannel(name string) {
 	m.channels[name] = channel
 }
 
-func (m Queue) CloseChannel(name string) {
+func (m *Queue) CloseChannel(name string) {
 	if err := m.channels[name].Close(); err != nil {
 		log.Fatal(err)
 	}
 	delete(m.channels, name)
 }
 
-func (m Queue) UseChannel(name string) (*mq.Channel, error) {
+func (m *Queue) UseChannel(name string) (*mq.Channel, error) {
 	if channel := m.channels[name]; channel != nil {
 		return channel, nil
 	}

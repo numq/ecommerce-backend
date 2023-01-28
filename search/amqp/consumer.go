@@ -15,7 +15,7 @@ func NewConsumer[T any](channel *amqp091.Channel, name string) Consumer[T] {
 	return Consumer[T]{Channel: channel, Name: name}
 }
 
-func (c Consumer[T]) Start(callback func(bytes []byte)) {
+func (c *Consumer[T]) Start(callback func(bytes []byte)) {
 	_, err := c.Channel.QueueDeclare(c.Name, false, false, false, false, nil)
 	if err != nil {
 		log.Println(err)
@@ -31,7 +31,7 @@ func (c Consumer[T]) Start(callback func(bytes []byte)) {
 	}()
 }
 
-func (c Consumer[T]) Stop() {
+func (c *Consumer[T]) Stop() {
 	err := c.Channel.Cancel(c.Name, false)
 	if err != nil {
 		log.Println(err)

@@ -15,10 +15,10 @@ type ServiceImpl struct {
 }
 
 func NewService(useCase UseCase, mapper Mapper) pb.AccountServiceServer {
-	return ServiceImpl{useCase: useCase, mapper: mapper}
+	return &ServiceImpl{useCase: useCase, mapper: mapper}
 }
 
-func (s ServiceImpl) CreateAccount(ctx context.Context, request *pb.CreateAccountRequest) (*pb.CreateAccountResponse, error) {
+func (s *ServiceImpl) CreateAccount(ctx context.Context, request *pb.CreateAccountRequest) (*pb.CreateAccountResponse, error) {
 	reqPhoneNumber := request.GetPhoneNumber()
 	if reqPhoneNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -34,7 +34,7 @@ func (s ServiceImpl) CreateAccount(ctx context.Context, request *pb.CreateAccoun
 	return &pb.CreateAccountResponse{Id: *id}, nil
 }
 
-func (s ServiceImpl) GetAccountById(ctx context.Context, request *pb.GetAccountByIdRequest) (*pb.GetAccountByIdResponse, error) {
+func (s *ServiceImpl) GetAccountById(ctx context.Context, request *pb.GetAccountByIdRequest) (*pb.GetAccountByIdResponse, error) {
 	reqId := request.GetId()
 	if reqId == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -46,7 +46,7 @@ func (s ServiceImpl) GetAccountById(ctx context.Context, request *pb.GetAccountB
 	return &pb.GetAccountByIdResponse{Account: s.mapper.EntityToMessage(account)}, nil
 }
 
-func (s ServiceImpl) GetAccountByPhoneNumber(ctx context.Context, request *pb.GetAccountByPhoneNumberRequest) (*pb.GetAccountByPhoneNumberResponse, error) {
+func (s *ServiceImpl) GetAccountByPhoneNumber(ctx context.Context, request *pb.GetAccountByPhoneNumberRequest) (*pb.GetAccountByPhoneNumberResponse, error) {
 	reqPhoneNumber := request.GetPhoneNumber()
 	if reqPhoneNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -58,7 +58,7 @@ func (s ServiceImpl) GetAccountByPhoneNumber(ctx context.Context, request *pb.Ge
 	return &pb.GetAccountByPhoneNumberResponse{Account: s.mapper.EntityToMessage(account)}, nil
 }
 
-func (s ServiceImpl) GetAccountsByRole(ctx context.Context, request *pb.GetAccountsByRoleRequest) (*pb.GetAccountsByRoleResponse, error) {
+func (s *ServiceImpl) GetAccountsByRole(ctx context.Context, request *pb.GetAccountsByRoleRequest) (*pb.GetAccountsByRoleResponse, error) {
 	accounts, err := s.useCase.GetAccountsByRole(ctx, Role(request.GetRole()), request.GetSkip(), request.GetLimit())
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (s ServiceImpl) GetAccountsByRole(ctx context.Context, request *pb.GetAccou
 	return &pb.GetAccountsByRoleResponse{Accounts: fn.Map(accounts, s.mapper.EntityToMessage)}, nil
 }
 
-func (s ServiceImpl) GetAccountsByStatus(ctx context.Context, request *pb.GetAccountsByStatusRequest) (*pb.GetAccountsByStatusResponse, error) {
+func (s *ServiceImpl) GetAccountsByStatus(ctx context.Context, request *pb.GetAccountsByStatusRequest) (*pb.GetAccountsByStatusResponse, error) {
 	accounts, err := s.useCase.GetAccountsByStatus(ctx, Status(request.GetStatus()), request.GetSkip(), request.GetLimit())
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (s ServiceImpl) GetAccountsByStatus(ctx context.Context, request *pb.GetAcc
 	return &pb.GetAccountsByStatusResponse{Accounts: fn.Map(accounts, s.mapper.EntityToMessage)}, nil
 }
 
-func (s ServiceImpl) UpdateAccount(ctx context.Context, request *pb.UpdateAccountRequest) (*pb.UpdateAccountResponse, error) {
+func (s *ServiceImpl) UpdateAccount(ctx context.Context, request *pb.UpdateAccountRequest) (*pb.UpdateAccountResponse, error) {
 	reqAccount := request.GetAccount()
 	if reqAccount.GetId() == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -86,7 +86,7 @@ func (s ServiceImpl) UpdateAccount(ctx context.Context, request *pb.UpdateAccoun
 	return &pb.UpdateAccountResponse{Account: s.mapper.EntityToMessage(account)}, nil
 }
 
-func (s ServiceImpl) RemoveAccount(ctx context.Context, request *pb.RemoveAccountRequest) (*pb.RemoveAccountResponse, error) {
+func (s *ServiceImpl) RemoveAccount(ctx context.Context, request *pb.RemoveAccountRequest) (*pb.RemoveAccountResponse, error) {
 	reqId := request.GetId()
 	if reqId == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")

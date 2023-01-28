@@ -12,6 +12,7 @@ import (
 	pb "gateway/generated"
 	"gateway/order"
 	"gateway/profile"
+	"gateway/search"
 	"gateway/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -65,7 +66,9 @@ func main() {
 	orderService := order.NewService(cfg.OrderAddress)
 	deliveryService := delivery.NewService(cfg.DeliveryAddress)
 	profileService := profile.NewService(cfg.ProfileAddress)
-	server.Server{Address: cfg.ServerAddress}.Launch(func(server *grpc.Server) {
+	searchService := search.NewService(cfg.SearchAddress)
+	grpcServer := server.Server{Address: cfg.ServerAddress}
+	grpcServer.Launch(func(server *grpc.Server) {
 		pb.RegisterAuthenticationServiceServer(server, authenticationService)
 		pb.RegisterCategoryServiceServer(server, categoryService)
 		pb.RegisterCatalogServiceServer(server, catalogService)
@@ -73,5 +76,6 @@ func main() {
 		pb.RegisterOrderServiceServer(server, orderService)
 		pb.RegisterDeliveryServiceServer(server, deliveryService)
 		pb.RegisterProfileServiceServer(server, profileService)
+		pb.RegisterSearchServiceServer(server, searchService)
 	}, authInterceptor)
 }

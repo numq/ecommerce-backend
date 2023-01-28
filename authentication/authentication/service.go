@@ -14,10 +14,10 @@ type ServiceImpl struct {
 }
 
 func NewService(useCase UseCase) pb.AuthenticationServiceServer {
-	return ServiceImpl{useCase: useCase}
+	return &ServiceImpl{useCase: useCase}
 }
 
-func (s ServiceImpl) SignInByPhoneNumber(ctx context.Context, request *pb.SignInByPhoneNumberRequest) (*pb.SignInByPhoneNumberResponse, error) {
+func (s *ServiceImpl) SignInByPhoneNumber(ctx context.Context, request *pb.SignInByPhoneNumberRequest) (*pb.SignInByPhoneNumberResponse, error) {
 	reqPhoneNumber := request.GetPhoneNumber()
 	if reqPhoneNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -26,7 +26,7 @@ func (s ServiceImpl) SignInByPhoneNumber(ctx context.Context, request *pb.SignIn
 	return nil, status.Errorf(codes.Unimplemented, "method SignInByPhoneNumber not implemented")
 }
 
-func (s ServiceImpl) SignOut(ctx context.Context, request *pb.SignOutRequest) (*pb.SignOutResponse, error) {
+func (s *ServiceImpl) SignOut(ctx context.Context, request *pb.SignOutRequest) (*pb.SignOutResponse, error) {
 	reqAccessToken := request.GetRefreshToken()
 	reqRefreshToken := request.GetRefreshToken()
 	if reqRefreshToken == "" {
@@ -38,7 +38,7 @@ func (s ServiceImpl) SignOut(ctx context.Context, request *pb.SignOutRequest) (*
 	return &pb.SignOutResponse{}, nil
 }
 
-func (s ServiceImpl) RefreshToken(ctx context.Context, request *pb.RefreshTokenRequest) (*pb.RefreshTokenResponse, error) {
+func (s *ServiceImpl) RefreshToken(ctx context.Context, request *pb.RefreshTokenRequest) (*pb.RefreshTokenResponse, error) {
 	reqAccessToken := request.GetAccessToken()
 	if reqAccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -57,7 +57,7 @@ func (s ServiceImpl) RefreshToken(ctx context.Context, request *pb.RefreshTokenR
 	return &pb.RefreshTokenResponse{AccessToken: tokenPair.AccessToken, RefreshToken: tokenPair.RefreshToken}, nil
 }
 
-func (s ServiceImpl) VerifyAccess(ctx context.Context, request *pb.VerifyAccessRequest) (*pb.VerifyAccessResponse, error) {
+func (s *ServiceImpl) VerifyAccess(ctx context.Context, request *pb.VerifyAccessRequest) (*pb.VerifyAccessResponse, error) {
 	reqAccessToken := request.GetAccessToken()
 	if reqAccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")

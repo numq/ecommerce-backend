@@ -76,7 +76,8 @@ func main() {
 		}
 		return nil
 	})
-	server.Server{Address: cfg.ServerAddress}.Launch(func(server *grpc.Server) {
+	grpcServer := server.Server{Address: cfg.ServerAddress}
+	grpcServer.Launch(func(server *grpc.Server) {
 		pb.RegisterAuthenticationServiceServer(server, authenticationService)
 	}, authInterceptor)
 }

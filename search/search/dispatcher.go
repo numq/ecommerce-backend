@@ -17,7 +17,7 @@ func NewDispatcher(useCase UseCase) Dispatcher {
 	return Dispatcher{context.Background(), make(chan error), useCase}
 }
 
-func (d Dispatcher) Insert(consumer amqp.Consumer[Item]) (err error) {
+func (d *Dispatcher) Insert(consumer amqp.Consumer[Item]) (err error) {
 	consumer.Start(func(bytes []byte) {
 		var item = Item{}
 		if err := json.Unmarshal(bytes, &item); err != nil {
@@ -34,7 +34,7 @@ func (d Dispatcher) Insert(consumer amqp.Consumer[Item]) (err error) {
 	return nil
 }
 
-func (d Dispatcher) Update(consumer amqp.Consumer[Item]) (err error) {
+func (d *Dispatcher) Update(consumer amqp.Consumer[Item]) (err error) {
 	consumer.Start(func(bytes []byte) {
 		var item = Item{}
 		if err := json.Unmarshal(bytes, &item); err != nil {
@@ -51,7 +51,7 @@ func (d Dispatcher) Update(consumer amqp.Consumer[Item]) (err error) {
 	return nil
 }
 
-func (d Dispatcher) Remove(consumer amqp.Consumer[Item]) (err error) {
+func (d *Dispatcher) Remove(consumer amqp.Consumer[Item]) (err error) {
 	consumer.Start(func(bytes []byte) {
 		var item = Item{}
 		if err := json.Unmarshal(bytes, &item); err != nil {

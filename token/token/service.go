@@ -13,10 +13,10 @@ type ServiceImpl struct {
 }
 
 func NewService(useCase UseCase) pb.TokenServiceServer {
-	return ServiceImpl{useCase: useCase}
+	return &ServiceImpl{useCase: useCase}
 }
 
-func (s ServiceImpl) GenerateToken(ctx context.Context, request *pb.GenerateTokenRequest) (*pb.GenerateTokenResponse, error) {
+func (s *ServiceImpl) GenerateToken(ctx context.Context, request *pb.GenerateTokenRequest) (*pb.GenerateTokenResponse, error) {
 	reqPayload := request.GetPayload()
 	if reqPayload == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -28,7 +28,7 @@ func (s ServiceImpl) GenerateToken(ctx context.Context, request *pb.GenerateToke
 	return &pb.GenerateTokenResponse{AccessToken: tokenPair.AccessToken, RefreshToken: tokenPair.RefreshToken}, nil
 }
 
-func (s ServiceImpl) VerifyToken(ctx context.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
+func (s *ServiceImpl) VerifyToken(ctx context.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
 	reqAccessToken := request.GetToken()
 	if reqAccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -39,7 +39,7 @@ func (s ServiceImpl) VerifyToken(ctx context.Context, request *pb.VerifyTokenReq
 	}
 	return &pb.VerifyTokenResponse{Payload: claims.Payload}, nil
 }
-func (s ServiceImpl) RevokeToken(ctx context.Context, request *pb.RevokeTokenRequest) (*pb.RevokeTokenResponse, error) {
+func (s *ServiceImpl) RevokeToken(ctx context.Context, request *pb.RevokeTokenRequest) (*pb.RevokeTokenResponse, error) {
 	reqToken := request.GetToken()
 	if reqToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")

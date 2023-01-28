@@ -32,13 +32,13 @@ func Connect(ctx context.Context, address string) *Database {
 	}
 }
 
-func (d Database) Disconnect() {
+func (d *Database) Disconnect() {
 	if err := d.client.Disconnect(d.context); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Disconnected to database: %s\n", d.address)
 }
 
-func (d Database) Collection(dbName string, collectionName string) *mongo.Collection {
+func (d *Database) Collection(dbName string, collectionName string) *mongo.Collection {
 	return d.client.Database(dbName).Collection(collectionName)
 }

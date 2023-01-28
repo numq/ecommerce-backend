@@ -16,10 +16,10 @@ type RepositoryImpl struct {
 }
 
 func NewRepository(service pb.TokenServiceClient) Repository {
-	return RepositoryImpl{service: service}
+	return &RepositoryImpl{service: service}
 }
 
-func (r RepositoryImpl) GenerateToken(ctx context.Context, payload string) (*Pair, error) {
+func (r *RepositoryImpl) GenerateToken(ctx context.Context, payload string) (*Pair, error) {
 	response, err := r.service.GenerateToken(ctx, &pb.GenerateTokenRequest{Payload: payload})
 	if err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func (r RepositoryImpl) GenerateToken(ctx context.Context, payload string) (*Pai
 	return &Pair{AccessToken: response.GetAccessToken(), RefreshToken: response.GetRefreshToken()}, err
 }
 
-func (r RepositoryImpl) VerifyToken(ctx context.Context, token string) (*string, error) {
+func (r *RepositoryImpl) VerifyToken(ctx context.Context, token string) (*string, error) {
 	response, err := r.service.VerifyToken(ctx, &pb.VerifyTokenRequest{Token: token})
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (r RepositoryImpl) VerifyToken(ctx context.Context, token string) (*string,
 	return &response.Payload, err
 }
 
-func (r RepositoryImpl) RevokeToken(ctx context.Context, token string) (*string, error) {
+func (r *RepositoryImpl) RevokeToken(ctx context.Context, token string) (*string, error) {
 	response, err := r.service.RevokeToken(ctx, &pb.RevokeTokenRequest{Token: token})
 	if err != nil {
 		return nil, err

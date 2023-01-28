@@ -17,10 +17,10 @@ type RepositoryImpl struct {
 }
 
 func NewRepository(client *redis.Client) Repository {
-	return RepositoryImpl{client: client}
+	return &RepositoryImpl{client: client}
 }
 
-func (r RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
+func (r *RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
 	if r.client.Exists(ctx, phoneNumber).Val() != 0 {
 		return nil, fmt.Errorf("not yet time")
 	}
@@ -31,7 +31,7 @@ func (r RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNu
 	return &timestamp, nil
 }
 
-func (r RepositoryImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
+func (r *RepositoryImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
 	if confirmationCode == r.client.Get(ctx, phoneNumber).Val() {
 		r.client.Del(ctx, phoneNumber)
 		return &phoneNumber, nil

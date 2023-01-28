@@ -15,10 +15,10 @@ type RepositoryImpl struct {
 }
 
 func NewRepository(service pb.ConfirmationServiceClient) Repository {
-	return RepositoryImpl{service: service}
+	return &RepositoryImpl{service: service}
 }
 
-func (r RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
+func (r *RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
 	response, err := r.service.SendPhoneNumberConfirmation(ctx, &pb.SendPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber})
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (r RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNu
 	return &response.RetryAt, err
 }
 
-func (r RepositoryImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
+func (r *RepositoryImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
 	response, err := r.service.VerifyPhoneNumberConfirmation(ctx, &pb.VerifyPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber, ConfirmationCode: confirmationCode})
 	if err != nil {
 		return nil, err

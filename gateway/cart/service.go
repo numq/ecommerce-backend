@@ -18,21 +18,21 @@ func NewService(address string) pb.CartServiceServer {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return ServiceImpl{Client: pb.NewCartServiceClient(connection)}
+	return &ServiceImpl{Client: pb.NewCartServiceClient(connection)}
 }
 
-func (s ServiceImpl) GetCart(ctx context.Context, request *pb.GetCartRequest) (*pb.GetCartResponse, error) {
+func (s *ServiceImpl) GetCart(ctx context.Context, request *pb.GetCartRequest) (*pb.GetCartResponse, error) {
 	return s.Client.GetCart(ctx, request)
 }
 
-func (s ServiceImpl) ClearCart(ctx context.Context, request *pb.ClearCartRequest) (*pb.ClearCartResponse, error) {
+func (s *ServiceImpl) ClearCart(ctx context.Context, request *pb.ClearCartRequest) (*pb.ClearCartResponse, error) {
 	return s.Client.ClearCart(ctx, request)
 }
 
-func (s ServiceImpl) IncreaseItemQuantity(ctx context.Context, request *pb.IncreaseItemQuantityRequest) (*pb.IncreaseItemQuantityResponse, error) {
+func (s *ServiceImpl) IncreaseItemQuantity(ctx context.Context, request *pb.IncreaseItemQuantityRequest) (*pb.IncreaseItemQuantityResponse, error) {
 	return s.Client.IncreaseItemQuantity(ctx, request)
 }
 
-func (s ServiceImpl) DecreaseItemQuantity(ctx context.Context, request *pb.DecreaseItemQuantityRequest) (*pb.DecreaseItemQuantityResponse, error) {
+func (s *ServiceImpl) DecreaseItemQuantity(ctx context.Context, request *pb.DecreaseItemQuantityRequest) (*pb.DecreaseItemQuantityResponse, error) {
 	return s.Client.DecreaseItemQuantity(ctx, request)
 }

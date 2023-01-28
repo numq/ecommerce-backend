@@ -12,13 +12,13 @@ type UseCaseImpl struct {
 }
 
 func NewUseCase(repository Repository) UseCase {
-	return UseCaseImpl{repository: repository}
+	return &UseCaseImpl{repository: repository}
 }
 
-func (u UseCaseImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
+func (u *UseCaseImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
 	return u.repository.SendPhoneNumberConfirmation(ctx, phoneNumber)
 }
 
-func (u UseCaseImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
+func (u *UseCaseImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
 	return u.repository.VerifyPhoneNumberConfirmation(ctx, phoneNumber, confirmationCode)
 }

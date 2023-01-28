@@ -13,10 +13,10 @@ type ServiceImpl struct {
 }
 
 func NewService(useCase UseCase) pb.ConfirmationServiceServer {
-	return ServiceImpl{useCase: useCase}
+	return &ServiceImpl{useCase: useCase}
 }
 
-func (s ServiceImpl) SendPhoneNumberConfirmation(ctx context.Context, request *pb.SendPhoneNumberConfirmationRequest) (*pb.SendPhoneNumberConfirmationResponse, error) {
+func (s *ServiceImpl) SendPhoneNumberConfirmation(ctx context.Context, request *pb.SendPhoneNumberConfirmationRequest) (*pb.SendPhoneNumberConfirmationResponse, error) {
 	reqPhoneNumber := request.GetPhoneNumber()
 	if reqPhoneNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
@@ -27,7 +27,7 @@ func (s ServiceImpl) SendPhoneNumberConfirmation(ctx context.Context, request *p
 	}
 	return &pb.SendPhoneNumberConfirmationResponse{RetryAt: *retryAt}, nil
 }
-func (s ServiceImpl) VerifyPhoneNumberConfirmation(ctx context.Context, request *pb.VerifyPhoneNumberConfirmationRequest) (*pb.VerifyPhoneNumberConfirmationResponse, error) {
+func (s *ServiceImpl) VerifyPhoneNumberConfirmation(ctx context.Context, request *pb.VerifyPhoneNumberConfirmationRequest) (*pb.VerifyPhoneNumberConfirmationResponse, error) {
 	reqPhoneNumber := request.GetPhoneNumber()
 	reqConfirmationCode := request.GetConfirmationCode()
 	if reqPhoneNumber == "" || reqConfirmationCode == "" {

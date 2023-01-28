@@ -18,21 +18,21 @@ func NewService(address string) pb.ProfileServiceServer {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return ServiceImpl{Client: pb.NewProfileServiceClient(connection)}
+	return &ServiceImpl{Client: pb.NewProfileServiceClient(connection)}
 }
 
-func (s ServiceImpl) CreateProfile(ctx context.Context, request *pb.CreateProfileRequest) (*pb.CreateProfileResponse, error) {
+func (s *ServiceImpl) CreateProfile(ctx context.Context, request *pb.CreateProfileRequest) (*pb.CreateProfileResponse, error) {
 	return s.Client.CreateProfile(ctx, request)
 }
 
-func (s ServiceImpl) GetProfileById(ctx context.Context, request *pb.GetProfileByIdRequest) (*pb.GetProfileByIdResponse, error) {
+func (s *ServiceImpl) GetProfileById(ctx context.Context, request *pb.GetProfileByIdRequest) (*pb.GetProfileByIdResponse, error) {
 	return s.Client.GetProfileById(ctx, request)
 }
 
-func (s ServiceImpl) UpdateProfile(ctx context.Context, request *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
+func (s *ServiceImpl) UpdateProfile(ctx context.Context, request *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
 	return s.Client.UpdateProfile(ctx, request)
 }
 
-func (s ServiceImpl) RemoveProfile(ctx context.Context, request *pb.RemoveProfileRequest) (*pb.RemoveProfileResponse, error) {
+func (s *ServiceImpl) RemoveProfile(ctx context.Context, request *pb.RemoveProfileRequest) (*pb.RemoveProfileResponse, error) {
 	return s.Client.RemoveProfile(ctx, request)
 }

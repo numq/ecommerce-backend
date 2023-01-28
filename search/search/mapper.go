@@ -13,10 +13,10 @@ type MapperImpl struct {
 }
 
 func NewMapper() Mapper {
-	return MapperImpl{}
+	return &MapperImpl{}
 }
 
-func (m MapperImpl) MessageToEntity(message *pb.Item) *Item {
+func (m *MapperImpl) MessageToEntity(message *pb.Item) *Item {
 	return &Item{
 		Id:          message.GetId(),
 		Sku:         message.GetSku(),
@@ -33,7 +33,7 @@ func (m MapperImpl) MessageToEntity(message *pb.Item) *Item {
 	}
 }
 
-func (m MapperImpl) EntityToMessage(entity *Item) *pb.Item {
+func (m *MapperImpl) EntityToMessage(entity *Item) *pb.Item {
 	return &pb.Item{
 		Id:          entity.Id,
 		Sku:         entity.Sku,

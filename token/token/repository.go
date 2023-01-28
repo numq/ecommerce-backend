@@ -21,10 +21,10 @@ type RepositoryImpl struct {
 }
 
 func NewRepository(config config.Config, client *redis.Client) Repository {
-	return RepositoryImpl{config: config, client: client}
+	return &RepositoryImpl{config: config, client: client}
 }
 
-func (r RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) (*Pair, error) {
+func (r *RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) (*Pair, error) {
 	timestamp := time.Now().Unix()
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"payload": payload,
@@ -44,7 +44,7 @@ func (r RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) (
 	return &Pair{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }
 
-func (r RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims, error) {
+func (r *RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims, error) {
 	if r.client.Exists(ctx, token).Val() == 0 {
 		claims := jwt.MapClaims{}
 		parsedToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
@@ -63,7 +63,7 @@ func (r RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims,
 	return nil, fmt.Errorf("invalid token")
 }
 
-func (r RepositoryImpl) RevokeToken(ctx context.Context, token string, expirationTimestamp int64) (*string, error) {
+func (r *RepositoryImpl) RevokeToken(ctx context.Context, token string, expirationTimestamp int64) (*string, error) {
 	revokedToken := r.client.Set(ctx, token, token, time.Duration(expirationTimestamp-time.Now().Unix()))
 	value, err := revokedToken.Val(), revokedToken.Err()
 	return &value, err

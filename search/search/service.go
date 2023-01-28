@@ -15,10 +15,10 @@ type ServiceImpl struct {
 }
 
 func NewService(useCase UseCase, mapper Mapper) pb.SearchServiceServer {
-	return ServiceImpl{useCase: useCase, mapper: mapper}
+	return &ServiceImpl{useCase: useCase, mapper: mapper}
 }
 
-func (s ServiceImpl) Search(ctx context.Context, request *pb.SearchRequest) (*pb.SearchResponse, error) {
+func (s *ServiceImpl) Search(ctx context.Context, request *pb.SearchRequest) (*pb.SearchResponse, error) {
 	reqQuery := request.GetQuery()
 	if reqQuery == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
