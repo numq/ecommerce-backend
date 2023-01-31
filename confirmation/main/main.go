@@ -42,6 +42,7 @@ func main() {
 		}
 	}
 	client := store.NewClient(context.Background(), fmt.Sprintf("%s:%s", cfg.RedisHostname, cfg.RedisPort))
+	defer client.Close()
 	accountRepository := confirmation.NewRepository(client)
 	accountUseCase := confirmation.NewUseCase(accountRepository)
 	accountService := confirmation.NewService(accountUseCase)
