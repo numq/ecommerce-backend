@@ -25,6 +25,10 @@ func (s *ServiceImpl) SignInByPhoneNumber(ctx context.Context, request *pb.SignI
 	return s.Client.SignInByPhoneNumber(ctx, request)
 }
 
+func (s *ServiceImpl) ConfirmPhoneNumber(ctx context.Context, request *pb.ConfirmPhoneNumberRequest) (*pb.ConfirmPhoneNumberResponse, error) {
+	return s.Client.ConfirmPhoneNumber(ctx, request)
+}
+
 func (s *ServiceImpl) SignOut(ctx context.Context, request *pb.SignOutRequest) (*pb.SignOutResponse, error) {
 	return s.Client.SignOut(ctx, request)
 }

@@ -9,6 +9,15 @@ message SignInByPhoneNumberRequest {
 }
 
 message SignInByPhoneNumberResponse {
+  int64 retryAt = 1;
+}
+
+message ConfirmPhoneNumberRequest{
+  string phoneNumber = 1;
+  string confirmationCode = 2;
+}
+
+message ConfirmPhoneNumberResponse{
   string accessToken = 1;
   string refreshToken = 2;
 }
@@ -41,6 +50,7 @@ message RefreshTokenResponse {
 
 service AuthenticationService {
   rpc SignInByPhoneNumber(SignInByPhoneNumberRequest) returns (SignInByPhoneNumberResponse);
+  rpc ConfirmPhoneNumber(ConfirmPhoneNumberRequest) returns (ConfirmPhoneNumberResponse);
   rpc SignOut(SignOutRequest) returns (SignOutResponse);
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc VerifyAccess(VerifyAccessRequest) returns (VerifyAccessResponse);
