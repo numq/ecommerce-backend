@@ -1,8 +1,6 @@
-# E-commerce microservices
+# E-commerce backend based on the gRPC microservices ecosystem
 
 > This is an overview of the project. Go to the submodule to see the implementation details of a specific service.
-
-E-commerce backend microservices 
 
 ![Overview](./media/ecommerce-backend-overview.png)
 
