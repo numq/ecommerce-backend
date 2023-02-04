@@ -17,11 +17,11 @@ func NewService(useCase UseCase) pb.TokenServiceServer {
 }
 
 func (s *ServiceImpl) GenerateToken(ctx context.Context, request *pb.GenerateTokenRequest) (*pb.GenerateTokenResponse, error) {
-	reqPayload := request.GetPayload()
-	if reqPayload == "" {
+	reqId := request.GetId()
+	if reqId == "" {
 		return nil, status.Error(codes.InvalidArgument, "Value cannot be empty")
 	}
-	tokenPair, err := s.useCase.GenerateTokenPair(ctx, reqPayload)
+	tokenPair, err := s.useCase.GenerateTokenPair(ctx, reqId)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (s *ServiceImpl) VerifyToken(ctx context.Context, request *pb.VerifyTokenRe
 	if err != nil {
 		return nil, err
 	}
-	return &pb.VerifyTokenResponse{Payload: claims.Payload}, nil
+	return &pb.VerifyTokenResponse{Id: claims.Id}, nil
 }
 func (s *ServiceImpl) RevokeToken(ctx context.Context, request *pb.RevokeTokenRequest) (*pb.RevokeTokenResponse, error) {
 	reqToken := request.GetToken()

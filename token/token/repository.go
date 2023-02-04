@@ -24,17 +24,18 @@ func NewRepository(config config.Config, client *redis.Client) Repository {
 	return &RepositoryImpl{config: config, client: client}
 }
 
-func (r *RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) (*Pair, error) {
+func (r *RepositoryImpl) GenerateTokenPair(ctx context.Context, id string) (*Pair, error) {
 	timestamp := time.Now().Unix()
 	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"payload": payload,
-		"iat":     timestamp,
-		"exp":     timestamp + (time.Minute * 30).Milliseconds(),
+		"id":  id,
+		"iat": timestamp,
+		"exp": timestamp + (time.Minute * 30).Milliseconds(),
 	}).SignedString([]byte(r.config.SecretKey))
 	if err != nil {
 		return nil, err
 	}
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":  id,
 		"iat": timestamp,
 		"exp": timestamp + (time.Hour * 24 * 30).Milliseconds(),
 	}).SignedString([]byte(r.config.SecretKey))
@@ -47,17 +48,17 @@ func (r *RepositoryImpl) GenerateTokenPair(ctx context.Context, payload string) 
 func (r *RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims, error) {
 	if r.client.Exists(ctx, token).Val() == 0 {
 		claims := jwt.MapClaims{}
-		parsedToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		parsedToken, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(r.config.SecretKey), nil
 		})
 		if err != nil {
 			return nil, err
 		}
 		if parsedToken.Valid {
-			payload := claims["payload"].(string)
+			id := claims["id"].(string)
 			iat := claims["iat"].(float64)
 			exp := claims["exp"].(float64)
-			return &Claims{Payload: payload, IssuedAt: int64(iat), ExpirationTime: int64(exp)}, err
+			return &Claims{Id: id, IssuedAt: int64(iat), ExpirationTime: int64(exp)}, err
 		}
 	}
 	return nil, fmt.Errorf("invalid token")
@@ -65,6 +66,9 @@ func (r *RepositoryImpl) VerifyToken(ctx context.Context, token string) (*Claims
 
 func (r *RepositoryImpl) RevokeToken(ctx context.Context, token string, expirationTimestamp int64) (*string, error) {
 	revokedToken := r.client.Set(ctx, token, token, time.Duration(expirationTimestamp-time.Now().Unix()))
-	value, err := revokedToken.Val(), revokedToken.Err()
-	return &value, err
+	err := revokedToken.Err()
+	if err != nil {
+		return nil, err
+	}
+	return &token, err
 }

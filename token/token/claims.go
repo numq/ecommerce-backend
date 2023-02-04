@@ -1,7 +1,7 @@
 package token
 
 type Claims struct {
-	Payload        string
+	Id             string
 	IssuedAt       int64
 	ExpirationTime int64
 }
