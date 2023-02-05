@@ -5,7 +5,7 @@ package token;
 option go_package = ".";
 
 message GenerateTokenRequest {
-  string payload = 1;
+  string id = 1;
 }
 
 message GenerateTokenResponse {
@@ -18,7 +18,7 @@ message VerifyTokenRequest {
 }
 
 message VerifyTokenResponse{
-  string payload = 1;
+  string id = 1;
 }
 
 message RevokeTokenRequest{

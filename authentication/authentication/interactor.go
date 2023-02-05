@@ -5,7 +5,6 @@ import (
 	"authentication/confirmation"
 	"authentication/token"
 	"context"
-	"encoding/json"
 )
 
 type UseCase interface {
@@ -44,18 +43,11 @@ func (u *UseCaseImpl) SendConfirmationCode(ctx context.Context, phoneNumber stri
 	if err != nil {
 		return nil, err
 	}
-	payload, err := json.Marshal(&acc)
-	if err != nil {
-		return nil, err
-	}
-	return u.tokenRepository.GenerateToken(ctx, string(payload))
+	return u.tokenRepository.GenerateToken(ctx, acc.Id)
 }
 
 func (u *UseCaseImpl) SignInByPhoneNumber(ctx context.Context, phoneNumber string) (*int64, error) {
-	acc, err := u.accountRepository.GetAccountByPhoneNumber(ctx, phoneNumber)
-	if err != nil {
-		return nil, err
-	}
+	acc, _ := u.accountRepository.GetAccountByPhoneNumber(ctx, phoneNumber)
 	if acc == nil {
 		if _, err := u.accountRepository.CreateAccount(ctx, phoneNumber, account.Customer); err != nil {
 			return nil, err
@@ -66,7 +58,7 @@ func (u *UseCaseImpl) SignInByPhoneNumber(ctx context.Context, phoneNumber strin
 
 func (u *UseCaseImpl) SignOut(ctx context.Context, tokens *token.Pair) (*string, error) {
 	access, refresh := tokens.AccessToken, tokens.RefreshToken
-	if _, err := u.tokenRepository.VerifyToken(ctx, access); err == nil {
+	if verifiedToken, _ := u.tokenRepository.VerifyToken(ctx, access); verifiedToken != nil {
 		if _, err := u.tokenRepository.RevokeToken(ctx, access); err != nil {
 			return nil, err
 		}
@@ -76,7 +68,7 @@ func (u *UseCaseImpl) SignOut(ctx context.Context, tokens *token.Pair) (*string,
 
 func (u *UseCaseImpl) RefreshToken(ctx context.Context, tokens *token.Pair) (*token.Pair, error) {
 	access, refresh := tokens.AccessToken, tokens.RefreshToken
-	payload, err := u.tokenRepository.VerifyToken(ctx, refresh)
+	id, err := u.tokenRepository.VerifyToken(ctx, refresh)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +78,7 @@ func (u *UseCaseImpl) RefreshToken(ctx context.Context, tokens *token.Pair) (*to
 	if _, err := u.tokenRepository.RevokeToken(ctx, refresh); err != nil {
 		return nil, err
 	}
-	return u.tokenRepository.GenerateToken(ctx, *payload)
+	return u.tokenRepository.GenerateToken(ctx, *id)
 }
 
 func (u *UseCaseImpl) VerifyAccess(ctx context.Context, accessToken string) (*string, error) {

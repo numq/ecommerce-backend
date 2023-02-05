@@ -11,15 +11,15 @@ type Repository interface {
 }
 
 type RepositoryImpl struct {
-	service pb.ConfirmationServiceClient
+	client pb.ConfirmationServiceClient
 }
 
-func NewRepository(service pb.ConfirmationServiceClient) Repository {
-	return &RepositoryImpl{service: service}
+func NewRepository(client pb.ConfirmationServiceClient) Repository {
+	return &RepositoryImpl{client: client}
 }
 
 func (r *RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneNumber string) (*int64, error) {
-	response, err := r.service.SendPhoneNumberConfirmation(ctx, &pb.SendPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber})
+	response, err := r.client.SendPhoneNumberConfirmation(ctx, &pb.SendPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber})
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (r *RepositoryImpl) SendPhoneNumberConfirmation(ctx context.Context, phoneN
 }
 
 func (r *RepositoryImpl) VerifyPhoneNumberConfirmation(ctx context.Context, phoneNumber string, confirmationCode string) (*string, error) {
-	response, err := r.service.VerifyPhoneNumberConfirmation(ctx, &pb.VerifyPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber, ConfirmationCode: confirmationCode})
+	response, err := r.client.VerifyPhoneNumberConfirmation(ctx, &pb.VerifyPhoneNumberConfirmationRequest{PhoneNumber: phoneNumber, ConfirmationCode: confirmationCode})
 	if err != nil {
 		return nil, err
 	}

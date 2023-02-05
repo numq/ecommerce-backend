@@ -5,17 +5,12 @@ import (
 	"authentication/authentication"
 	"authentication/config"
 	"authentication/confirmation"
-	"authentication/database"
 	pb "authentication/generated"
 	"authentication/server"
-	"authentication/store"
 	"authentication/token"
-	"context"
 	"flag"
-	"fmt"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"google.golang.org/grpc/metadata"
 	"log"
 	"os"
 	"os/exec"
@@ -55,29 +50,12 @@ func main() {
 	confirmationClient := confirmation.NewClient(cfg.ConfirmationAddress)
 	confirmationRepository := confirmation.NewRepository(confirmationClient)
 
-	client := store.NewClient(context.Background(), fmt.Sprintf("%s:%s", cfg.RedisHostname, cfg.RedisPort))
-	if client != nil {
-		// TODO use store
-	}
-	db := database.Connect(context.Background(), fmt.Sprintf("mongodb://%s:%s", cfg.MongoHostname, cfg.MongoPort))
-	defer db.Disconnect()
-	if db != nil {
-		// TODO use db
-	}
-	authenticationRepository := authentication.NewRepository(db.Collection(cfg.DatabaseName, cfg.CollectionItems))
-	if authenticationRepository != nil {
-		// TODO use repository
-	}
 	authenticationUseCase := authentication.NewUseCase(accountRepository, confirmationRepository, tokenRepository)
-	authenticationService := authentication.NewService(authenticationUseCase)
-	authInterceptor := server.NewInterceptor("Authorization", func(ctx context.Context, header string) error {
-		if header != cfg.ApiKey {
-			return status.Errorf(codes.Unauthenticated, "Invalid API key")
-		}
-		return nil
-	})
+
+	md := metadata.New(map[string]string{"Authorization": cfg.ApiKey})
+	authenticationService := authentication.NewService(authenticationUseCase, md)
 	grpcServer := server.Server{Address: cfg.ServerAddress}
 	grpcServer.Launch(func(server *grpc.Server) {
 		pb.RegisterAuthenticationServiceServer(server, authenticationService)
-	}, authInterceptor)
+	})
 }
