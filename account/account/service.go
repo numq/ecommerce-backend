@@ -43,7 +43,10 @@ func (s *ServiceImpl) GetAccountById(ctx context.Context, request *pb.GetAccount
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetAccountByIdResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	if account != nil {
+		return &pb.GetAccountByIdResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	}
+	return nil, status.Error(codes.NotFound, codes.NotFound.String())
 }
 
 func (s *ServiceImpl) GetAccountByPhoneNumber(ctx context.Context, request *pb.GetAccountByPhoneNumberRequest) (*pb.GetAccountByPhoneNumberResponse, error) {
@@ -55,7 +58,10 @@ func (s *ServiceImpl) GetAccountByPhoneNumber(ctx context.Context, request *pb.G
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetAccountByPhoneNumberResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	if account != nil {
+		return &pb.GetAccountByPhoneNumberResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	}
+	return nil, status.Error(codes.NotFound, codes.NotFound.String())
 }
 
 func (s *ServiceImpl) GetAccountsByRole(ctx context.Context, request *pb.GetAccountsByRoleRequest) (*pb.GetAccountsByRoleResponse, error) {
@@ -83,7 +89,10 @@ func (s *ServiceImpl) UpdateAccount(ctx context.Context, request *pb.UpdateAccou
 	if err != nil {
 		return nil, err
 	}
-	return &pb.UpdateAccountResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	if account != nil {
+		return &pb.UpdateAccountResponse{Account: s.mapper.EntityToMessage(account)}, nil
+	}
+	return nil, status.Error(codes.NotFound, codes.NotFound.String())
 }
 
 func (s *ServiceImpl) RemoveAccount(ctx context.Context, request *pb.RemoveAccountRequest) (*pb.RemoveAccountResponse, error) {

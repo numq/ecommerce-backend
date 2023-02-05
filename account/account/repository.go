@@ -41,49 +41,66 @@ func (r *RepositoryImpl) CreateAccount(ctx context.Context, phoneNumber string, 
 	return &id, nil
 }
 
-func (r *RepositoryImpl) GetAccountById(ctx context.Context, id string) (result *Account, err error) {
-	if err = r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&result); err != nil {
-		return nil, err
+func (r *RepositoryImpl) GetAccountById(ctx context.Context, id string) (*Account, error) {
+	var result *Account
+	if err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&result); err != nil {
+		if err != mongo.ErrNoDocuments {
+			return nil, err
+		}
 	}
-	return
+	return result, nil
 }
 
-func (r *RepositoryImpl) GetAccountByPhoneNumber(ctx context.Context, phoneNumber string) (result *Account, err error) {
-	if err = r.collection.FindOne(ctx, bson.M{"phoneNumber": phoneNumber}).Decode(&result); err != nil {
-		return nil, err
+func (r *RepositoryImpl) GetAccountByPhoneNumber(ctx context.Context, phoneNumber string) (*Account, error) {
+	var result *Account
+	if err := r.collection.FindOne(ctx, bson.M{"phoneNumber": phoneNumber}).Decode(&result); err != nil {
+		if err != mongo.ErrNoDocuments {
+			return nil, err
+		}
 	}
-	return
+	return result, nil
 }
 
-func (r *RepositoryImpl) GetAccountsByRole(ctx context.Context, role Role, skip int64, limit int64) (result []*Account, err error) {
+func (r *RepositoryImpl) GetAccountsByRole(ctx context.Context, role Role, skip int64, limit int64) ([]*Account, error) {
 	cursor, err := r.collection.Find(ctx, bson.M{"role": role}, &options.FindOptions{Skip: &skip, Limit: &limit})
+	defer cursor.Close(ctx)
 	if err != nil {
 		return nil, err
 	}
+	var result []*Account
 	if err = cursor.All(ctx, &result); err != nil {
-		return nil, err
+		if err != mongo.ErrNoDocuments {
+			return nil, err
+		}
 	}
-	return
+	return result, nil
 }
 
-func (r *RepositoryImpl) GetAccountsByStatus(ctx context.Context, status Status, skip int64, limit int64) (result []*Account, err error) {
+func (r *RepositoryImpl) GetAccountsByStatus(ctx context.Context, status Status, skip int64, limit int64) ([]*Account, error) {
 	cursor, err := r.collection.Find(ctx, bson.M{"status": status}, &options.FindOptions{Skip: &skip, Limit: &limit})
+	defer cursor.Close(ctx)
 	if err != nil {
 		return nil, err
 	}
+	var result []*Account
 	if err = cursor.All(ctx, &result); err != nil {
-		return nil, err
+		if err != mongo.ErrNoDocuments {
+			return nil, err
+		}
 	}
-	return
+	return result, nil
 }
 
-func (r *RepositoryImpl) UpdateAccount(ctx context.Context, account *Account) (result *Account, err error) {
+func (r *RepositoryImpl) UpdateAccount(ctx context.Context, account *Account) (*Account, error) {
 	after := options.After
 	opts := options.FindOneAndUpdateOptions{ReturnDocument: &after}
-	if err = r.collection.FindOneAndUpdate(ctx, bson.M{"_id": account.Id}, bson.M{"$set": bson.M{"role": account.Role, "status": account.Status}}, &opts).Decode(&result); err != nil {
-		return nil, err
+	var result *Account
+	if err := r.collection.FindOneAndUpdate(ctx, bson.M{"_id": account.Id}, bson.M{"$set": bson.M{"role": account.Role, "status": account.Status}}, &opts).Decode(&result); err != nil {
+		if err != mongo.ErrNoDocuments {
+			return nil, err
+		}
 	}
-	return
+	return result, nil
 }
 
 func (r *RepositoryImpl) RemoveAccount(ctx context.Context, id string) (*string, error) {
