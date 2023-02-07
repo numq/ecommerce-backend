@@ -1,0 +1,3 @@
+export enum PromoType {
+    FREE_SHIPPING, TOTAL_DISCOUNT, LIST_DISCOUNT,
+}
