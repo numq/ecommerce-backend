@@ -22,12 +22,12 @@ export class Store {
     }).then(client => {
         client.connect().then(() => {
             this.client = client;
-            console.log(`Connected to cache: ${this.config.REDIS_URL}`);
+            console.log(`Connected to store: ${this.config.REDIS_URL}`);
         }).catch(console.error);
     }).catch(console.error);
 
     close = () => this.client?.disconnect().then(() => {
-        console.log(`Disconnected from cache: ${this.config.REDIS_URL}`);
+        console.log(`Disconnected from store: ${this.config.REDIS_URL}`);
         this.client = null;
     }).catch(console.error);
 }

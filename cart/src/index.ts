@@ -4,7 +4,7 @@ import {CartServiceServer, CartServiceService} from "./generated/cart";
 import {Store} from "./store/Store";
 import {Module} from "./di/module";
 import {Server} from "./server/Server";
-import {createApplication} from "./app";
+import {createApplication} from "./application";
 
 
 const initialize = async () => {

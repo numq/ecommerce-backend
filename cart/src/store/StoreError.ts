@@ -1,3 +1,3 @@
-export namespace CacheError {
+export namespace StoreError {
     export const client = new Error("Unavailable client");
 }
