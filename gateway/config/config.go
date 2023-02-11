@@ -15,6 +15,7 @@ type Config struct {
 	PaymentAddress        string `mapstructure:"PAYMENT_ADDRESS"`
 	SearchAddress         string `mapstructure:"SEARCH_ADDRESS"`
 	ProfileAddress        string `mapstructure:"PROFILE_ADDRESS"`
+	PromoAddress          string `mapstructure:"PROMO_ADDRESS"`
 	AuthenticationAddress string `mapstructure:"AUTHENTICATION_ADDRESS"`
 }
 

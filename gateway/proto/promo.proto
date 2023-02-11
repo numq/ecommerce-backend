@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package promo;
+
+option go_package = ".";
+
+message Promo{
+  string value = 1;
+  bool reusable = 2;
+  float requiredAmount = 3;
+  repeated string categoryIds = 4;
+  repeated string productIds = 5;
+  bool freeShipping = 6;
+  int64 expirationTime = 7;
+}
+
+message InsertPromoRequest{
+  string value = 1;
+  bool reusable = 2;
+  float requiredAmount = 3;
+  repeated string categoryIds = 4;
+  repeated string productIds = 5;
+  bool freeShipping = 6;
+  int64 expirationTime = 7;
+}
+
+message InsertPromoResponse{
+  Promo promo = 1;
+}
+
+message GetPromoRequest{
+  string value = 1;
+}
+
+message GetPromoResponse{
+  Promo promo = 1;
+}
+
+message RemovePromoRequest{
+  string value = 1;
+}
+
+message RemovePromoResponse{
+  string value = 1;
+}
+
+service PromoService{
+  rpc insertPromo(InsertPromoRequest) returns (InsertPromoResponse);
+  rpc getPromo(GetPromoRequest) returns (GetPromoResponse);
+  rpc removePromo(RemovePromoRequest) returns (RemovePromoResponse);
+}
