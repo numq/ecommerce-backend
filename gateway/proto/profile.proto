@@ -8,7 +8,6 @@ message Profile {
   string id = 1;
   string name = 2;
   repeated string addresses = 3;
-  repeated string usedCoupons = 4;
 }
 
 message CreateProfileRequest{

@@ -26,8 +26,7 @@ export class ProfileRepositoryImpl implements ProfileRepository {
             _id: ObjectId.createFromHexString(profile.id),
             id: profile.id,
             name: profile.name,
-            addresses: [],
-            usedCoupons: []
+            addresses: []
         })),
         TE.map(({insertedId}) => insertedId.toHexString())
     );
