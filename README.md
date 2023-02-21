@@ -1,6 +1,15 @@
-# E-commerce backend based on the gRPC microservices ecosystem
+# Ecommerce
+
+Ecommerce backend based on the gRPC microservices ecosystem that includes: _authentication, shopping, ordering, promo usage, delivery, shipping tracking, etc_
 
 > This is an overview of the project. Go to the submodule to see the implementation details of a specific service.
+
+## Design features:
+
+- Multilanguage: *Golang, TypeScript*
+- *JWT* authentication
+- *gRPC* based microservices
+- *gRPC* based gateway
 
 ![Overview](./media/ecommerce-backend-overview.png)
 
