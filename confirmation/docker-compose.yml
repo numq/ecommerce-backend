@@ -1,14 +1,15 @@
+version: '3'
 services:
-  application:
+  confirmation:
     build: .
     depends_on:
-      - redis
+      - confirmation_redis
     volumes:
       - ./:/data
     restart: on-failure
     ports:
       - '8083:8083'
-  redis:
+  confirmation_redis:
     image: redis:latest
     restart: on-failure
     ports:

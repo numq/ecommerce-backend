@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
-  application:
+  category:
     build: .
     depends_on:
-      - mongo
+      - category_mongo
     environment:
       - MONGO_HOSTNAME=mongodb
     volumes:
@@ -11,7 +11,7 @@ services:
     restart: on-failure
     ports:
       - '8001:8001'
-  mongo:
+  category_mongo:
     image: mongo:latest
     restart: on-failure
     ports:

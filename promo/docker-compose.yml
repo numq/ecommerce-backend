@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
-  application:
+  promo:
     build: .
     depends_on:
-      - redis
+      - promo_redis
     environment:
       - REDIS_HOSTNAME=redis
     volumes:
@@ -11,7 +11,7 @@ services:
     restart: on-failure
     ports:
       - '8009:8009'
-  redis:
+  promo_redis:
     image: redis:latest
     restart: on-failure
     ports:

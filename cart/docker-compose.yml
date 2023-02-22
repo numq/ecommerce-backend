@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
-  application:
+  cart:
     build: .
     depends_on:
-      - redis
+      - cart_redis
     environment:
       - REDIS_HOSTNAME=redis
     volumes:
@@ -11,7 +11,7 @@ services:
     restart: on-failure
     ports:
       - '8003:8003'
-  redis:
+  cart_redis:
     image: redis:latest
     restart: on-failure
     ports:

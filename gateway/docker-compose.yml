@@ -1,5 +1,6 @@
+version: '3'
 services:
-  application:
+  gateway:
     build: .
     volumes:
       - ./:/data

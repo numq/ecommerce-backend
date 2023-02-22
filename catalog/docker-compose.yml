@@ -1,9 +1,10 @@
-version: "3"
+version: '3'
 services:
-  application:
+  catalog:
     build: .
     depends_on:
-      - mongo
+      - catalog_mongo
+      - catalog_rabbitmq
     environment:
       - MONGO_HOSTNAME=mongodb
       - RABBITMQ_HOSTNAME=rabbitmq
@@ -12,12 +13,12 @@ services:
     restart: on-failure
     ports:
       - '8002:8002'
-  mongo:
+  catalog_mongo:
     image: mongo:latest
     restart: on-failure
     ports:
       - '27017:27017'
-  rabbitmq:
+  catalog_rabbitmq:
     image: rabbitmq:latest
     restart: on-failure
     ports:

@@ -1,14 +1,15 @@
+version: '3'
 services:
-  application:
+  token:
     build: .
     depends_on:
-      - redis
+      - token_redis
     volumes:
       - ./:/data
     restart: on-failure
     ports:
       - '8081:8081'
-  redis:
+  token_redis:
     image: redis:latest
     restart: on-failure
     ports:

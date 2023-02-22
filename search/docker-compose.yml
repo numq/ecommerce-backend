@@ -1,20 +1,21 @@
+version: '3'
 services:
-  application:
+  search:
     build: .
     depends_on:
-      - elasticsearch
-      - rabbitmq
+      - search_elasticsearch
+      - search_rabbitmq
     volumes:
       - ./:/data
     restart: on-failure
     ports:
       - '8007:8007'
-  elasticsearch:
+  search_elasticsearch:
     image: elasticsearch:8.6.0
     restart: on-failure
     ports:
       - '9200:9200'
-  rabbitmq:
+  search_rabbitmq:
     image: rabbitmq:latest
     restart: on-failure
     ports:

@@ -1,14 +1,15 @@
+version: '3'
 services:
-  application:
+  account:
     build: .
     depends_on:
-      - mongo
+      - account_mongo
     volumes:
       - ./:/data
     restart: on-failure
     ports:
       - '8082:8082'
-  mongo:
+  account_mongo:
     image: mongo:latest
     restart: on-failure
     ports:

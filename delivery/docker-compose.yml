@@ -1,9 +1,9 @@
-version: "3"
+version: '3'
 services:
-  application:
+  delivery:
     build: .
     depends_on:
-      - mongo
+      - delivery_mongo
     environment:
       - MONGO_HOSTNAME=mongodb
     volumes:
@@ -11,7 +11,7 @@ services:
     restart: on-failure
     ports:
       - '8005:8005'
-  mongo:
+  delivery_mongo:
     image: mongo:latest
     restart: on-failure
     ports:
