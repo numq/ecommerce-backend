@@ -46,3 +46,7 @@ Ecommerce backend based on the gRPC microservices ecosystem that includes: _auth
 ##### Shipping related:
 
 - [Delivery](https://github.com/numq/ecommerce-backend/delivery)
+
+> [Try plugin for Intellij, make it easy to generate Protobuf code](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
+> 
+> [![Protobuf Blueprint](https://github.com/numq/protobuf-blueprint-plugin/blob/master/media/logo.png)](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
