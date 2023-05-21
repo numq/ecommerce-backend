@@ -1,8 +1,14 @@
 # Ecommerce
 
+> This is an overview of the project. Go to the submodule to see the implementation details of a specific service.
+
 Ecommerce backend based on the gRPC microservices ecosystem that includes: _authentication, shopping, ordering, promo usage, delivery, shipping tracking, etc_
 
-> This is an overview of the project. Go to the submodule to see the implementation details of a specific service.
+____
+
+[Try plugin for Intellij, make it easy to generate Protobuf code](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
+
+[![Protobuf Blueprint](https://github.com/numq/protobuf-blueprint-plugin/blob/master/media/logo.png)](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
 
 ## Design features:
 
@@ -46,7 +52,3 @@ Ecommerce backend based on the gRPC microservices ecosystem that includes: _auth
 ##### Shipping related:
 
 - [Delivery](https://github.com/numq/ecommerce-backend/delivery)
-
-> [Try plugin for Intellij, make it easy to generate Protobuf code](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
-> 
-> [![Protobuf Blueprint](https://github.com/numq/protobuf-blueprint-plugin/blob/master/media/logo.png)](https://plugins.jetbrains.com/plugin/21792-protobuf-blueprint)
