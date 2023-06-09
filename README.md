@@ -1,8 +1,8 @@
-# Ecommerce
+# E-commerce backend
 
 > This is an overview of the project. Go to the submodule to see the implementation details of a specific service.
 
-Ecommerce backend based on the gRPC microservices ecosystem that includes: _authentication, shopping, ordering, promo usage, delivery, shipping tracking, etc_
+E-commerce backend based on the gRPC microservices ecosystem and Clean Architecture principles, includes: _authentication, shopping, ordering, promo usage, delivery, shipping tracking, etc_
 
 ____
 
