@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "protoc": "npx rimraf ./src/generated && npx mkdirp ./src/generated && npx protoc --plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=proto proto/*.proto",
+    "protoc": "npx protoc --plugin=protoc-gen-ts_proto=.\\node_modules\\.bin\\protoc-gen-ts_proto.cmd --ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true --ts_proto_out=./src/generated -I=../proto cart.proto",
+    "protoc-debug": "npx rimraf src/generated && npx mkdirp src/generated && npm run protoc",
     "build": "tsc -p .",
     "dev": "ts-node src/index.ts",
     "test": "jest"

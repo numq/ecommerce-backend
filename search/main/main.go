@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
-	"os"
-	"os/exec"
 	"search/amqp"
 	"search/config"
 	"search/elastic"
@@ -27,17 +25,6 @@ func main() {
 	cfg, err := config.LoadConfig(cfgName)
 	if err != nil {
 		log.Fatal(err)
-	}
-	if !*productionMode {
-		if err := os.RemoveAll("./generated"); err != nil {
-			log.Fatal(err)
-		}
-		if err := os.Mkdir("./generated", os.ModePerm); err != nil {
-			log.Fatal(err)
-		}
-		if err := exec.Command("protoc", "--go_out=generated", "--go-grpc_out=generated", "--proto_path=proto", "proto/*.proto").Run(); err != nil {
-			log.Fatal(err)
-		}
 	}
 
 	es := elastic.NewElastic([]string{fmt.Sprintf("http://%s:%s", cfg.ElasticHostname, cfg.ElasticPort)})

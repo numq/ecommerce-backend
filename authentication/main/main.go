@@ -12,8 +12,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"log"
-	"os"
-	"os/exec"
 )
 
 func main() {
@@ -28,17 +26,6 @@ func main() {
 	cfg, err := config.LoadConfig(cfgName)
 	if err != nil {
 		log.Fatal(err)
-	}
-	if !*productionMode {
-		if err := os.RemoveAll("./generated"); err != nil {
-			log.Fatal(err)
-		}
-		if err := os.Mkdir("./generated", os.ModePerm); err != nil {
-			log.Fatal(err)
-		}
-		if err := exec.Command("protoc", "--go_out=generated", "--go-grpc_out=generated", "--proto_path=proto", "proto/*.proto").Run(); err != nil {
-			log.Fatal(err)
-		}
 	}
 
 	tokenClient := token.NewClient(cfg.TokenAddress)

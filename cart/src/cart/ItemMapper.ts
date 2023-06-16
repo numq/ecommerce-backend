@@ -1,4 +1,4 @@
-import {Item as ItemMessage} from "../generated/cart";
+import {CartItem as ItemMessage} from "../generated/cart";
 import {Item} from "./Item";
 
 export namespace ItemMapper {

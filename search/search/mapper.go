@@ -5,8 +5,8 @@ import (
 )
 
 type Mapper interface {
-	MessageToEntity(message *pb.Item) *Item
-	EntityToMessage(entity *Item) *pb.Item
+	MessageToEntity(message *pb.SearchItem) *Item
+	EntityToMessage(entity *Item) *pb.SearchItem
 }
 
 type MapperImpl struct {
@@ -16,7 +16,7 @@ func NewMapper() Mapper {
 	return &MapperImpl{}
 }
 
-func (m *MapperImpl) MessageToEntity(message *pb.Item) *Item {
+func (m *MapperImpl) MessageToEntity(message *pb.SearchItem) *Item {
 	return &Item{
 		Id:          message.GetId(),
 		Sku:         message.GetSku(),
@@ -33,8 +33,8 @@ func (m *MapperImpl) MessageToEntity(message *pb.Item) *Item {
 	}
 }
 
-func (m *MapperImpl) EntityToMessage(entity *Item) *pb.Item {
-	return &pb.Item{
+func (m *MapperImpl) EntityToMessage(entity *Item) *pb.SearchItem {
+	return &pb.SearchItem{
 		Id:          entity.Id,
 		Sku:         entity.Sku,
 		Name:        entity.Name,
