@@ -4,44 +4,44 @@ package cart;
 
 option go_package = ".";
 
-message Item {
+message CartItem {
   string id = 1;
   int32 quantity = 2;
-  int64 addedAt = 3;
+  int64 added_at = 3;
 }
 
 message GetCartRequest {
-  string cartId = 1;
+  string cart_id = 1;
 }
 
 message GetCartResponse {
-  repeated Item items = 1;
+  repeated CartItem items = 1;
 }
 
 message ClearCartRequest{
-  string cartId = 1;
+  string cart_id = 1;
 }
 
 message ClearCartResponse{
-  string cartId = 1;
+  string cart_id = 1;
 }
 
 message IncreaseItemQuantityRequest {
-  string cartId = 1;
-  string itemId = 2;
+  string cart_id = 1;
+  string item_id = 2;
 }
 
 message IncreaseItemQuantityResponse {
-  Item item = 1;
+  CartItem item = 1;
 }
 
 message DecreaseItemQuantityRequest{
-  string cartId = 1;
-  string itemId = 2;
+  string cart_id = 1;
+  string item_id = 2;
 }
 
 message DecreaseItemQuantityResponse{
-  optional Item item = 1;
+  optional CartItem item = 1;
 }
 
 service CartService{

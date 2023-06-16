@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package confirmation;
+
+option go_package = ".";
+
+message SendPhoneNumberConfirmationRequest {
+  string phone_number = 1;
+}
+
+message SendPhoneNumberConfirmationResponse {
+  int64 retry_at = 1;
+}
+
+message VerifyPhoneNumberConfirmationRequest {
+  string phone_number = 1;
+  string confirmation_code = 2;
+}
+
+message VerifyPhoneNumberConfirmationResponse {
+  string phone_number = 1;
+}
+
+service ConfirmationService {
+  rpc SendPhoneNumberConfirmation(SendPhoneNumberConfirmationRequest) returns(SendPhoneNumberConfirmationResponse);
+  rpc VerifyPhoneNumberConfirmation(VerifyPhoneNumberConfirmationRequest) returns(VerifyPhoneNumberConfirmationResponse);
+}

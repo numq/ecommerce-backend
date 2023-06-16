@@ -5,33 +5,33 @@ package authentication;
 option go_package = ".";
 
 message SignInByPhoneNumberRequest {
-  string phoneNumber = 1;
+  string phone_number = 1;
 }
 
 message SignInByPhoneNumberResponse {
-  int64 retryAt = 1;
+  int64 retry_at = 1;
 }
 
 message ConfirmPhoneNumberRequest{
-  string phoneNumber = 1;
-  string confirmationCode = 2;
+  string phone_number = 1;
+  string confirmation_code = 2;
 }
 
 message ConfirmPhoneNumberResponse{
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message SignOutRequest {
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message SignOutResponse {
 }
 
 message VerifyAccessRequest {
-  string accessToken = 1;
+  string access_token = 1;
 }
 
 message VerifyAccessResponse {
@@ -39,13 +39,13 @@ message VerifyAccessResponse {
 }
 
 message RefreshTokenRequest {
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message RefreshTokenResponse {
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 service AuthenticationService {

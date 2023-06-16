@@ -4,19 +4,19 @@ package search;
 
 option go_package = ".";
 
-message Item {
+message SearchItem {
   string id = 1;
   string sku = 2;
   string name = 3;
   string description = 4;
-  bytes imageBytes = 5;
+  bytes image_bytes = 5;
   float price = 6;
   float discount = 7;
   float weight = 8;
   int32 quantity = 9;
   repeated string tags = 10;
-  int64 createdAt = 11;
-  int64 updatedAt = 12;
+  int64 created_at = 11;
+  int64 updated_at = 12;
 }
 
 message SearchRequest {
@@ -24,7 +24,7 @@ message SearchRequest {
 }
 
 message SearchResponse {
-  repeated Item items = 1;
+  repeated SearchItem items = 1;
 }
 
 service SearchService {

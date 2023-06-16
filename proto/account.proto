@@ -19,14 +19,14 @@ enum Status {
 
 message Account {
   string id = 1;
-  string phoneNumber = 2;
+  string phone_number = 2;
   Role role = 3;
   Status status = 4;
-  int64 createdAt = 5;
+  int64 created_at = 5;
 }
 
 message CreateAccountRequest {
-  string phoneNumber = 1;
+  string phone_number = 1;
   Role role = 2;
 }
 
@@ -43,7 +43,7 @@ message GetAccountByIdResponse {
 }
 
 message GetAccountByPhoneNumberRequest {
-  string phoneNumber = 1;
+  string phone_number = 1;
 }
 
 message GetAccountByPhoneNumberResponse {

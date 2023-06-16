@@ -8,10 +8,10 @@ message Category{
   string id = 1;
   string name = 2;
   string description = 3;
-  bytes imageBytes = 4;
+  bytes image_bytes = 4;
   repeated string tags = 5;
-  int64 createdAt = 6;
-  int64 updatedAt = 7;
+  int64 created_at = 6;
+  int64 updated_at = 7;
 }
 
 message AddCategoryRequest {

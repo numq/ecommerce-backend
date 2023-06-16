@@ -9,8 +9,8 @@ message GenerateTokenRequest {
 }
 
 message GenerateTokenResponse {
-  string accessToken = 1;
-  string refreshToken = 2;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message VerifyTokenRequest {
