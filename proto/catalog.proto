@@ -45,8 +45,9 @@ message GetCatalogItemByIdResponse {
 
 message GetCatalogItemsByTagsRequest {
   repeated string tags = 1;
-  int64 skip = 2;
-  int64 limit = 3;
+  SortType sort_type = 2;
+  int64 skip = 3;
+  int64 limit = 4;
 }
 
 message GetCatalogItemsByTagsResponse {

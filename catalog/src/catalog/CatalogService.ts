@@ -52,9 +52,9 @@ export class CatalogService implements CatalogServiceServer {
     };
 
     getCatalogItemsByTags = (call: ServerUnaryCall<GetCatalogItemsByTagsRequest, GetCatalogItemsByTagsResponse>, callback: sendUnaryData<GetCatalogItemsByTagsResponse>) => {
-        const {tags, skip, limit} = call.request;
+        const {tags, sortType, skip, limit} = call.request;
         if (tags && skip && limit) {
-            return response(this.getCatalogItemsByTagsUseCase.execute([tags, skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
+            return response(this.getCatalogItemsByTagsUseCase.execute([tags, sortType.valueOf(), skip, limit]), callback, value => ({items: value.map(CatalogItemMapper.entityToMessage)}));
         }
         return callback({code: status.INVALID_ARGUMENT});
     };

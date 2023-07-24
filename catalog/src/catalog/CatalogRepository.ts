@@ -1,12 +1,13 @@
 import {CatalogItem} from "./CatalogItem";
 import {inject, injectable} from "inversify";
-import {Collection, ObjectId} from "mongodb";
+import {Collection, ObjectId, Sort} from "mongodb";
 import {Types} from "../di/types";
 import {taskEither as TE} from "fp-ts";
 import {pipe} from "fp-ts/function";
 import {TaskEither} from "fp-ts/TaskEither";
 import {Channel} from "amqplib";
 import {Buffer} from "buffer";
+import {SortType} from "./SortType";
 
 
 export interface CatalogRepository {
@@ -14,7 +15,7 @@ export interface CatalogRepository {
 
     getItemById(id: string): TaskEither<Error, CatalogItem | null>
 
-    getItemsByTags(tag: string[], skip: number, limit: number): TaskEither<Error, CatalogItem[]>
+    getItemsByTags(tag: string[], sortType: SortType, skip: number, limit: number): TaskEither<Error, CatalogItem[]>
 
     updateItem(item: CatalogItem): TaskEither<Error, CatalogItem | null>
 
@@ -58,8 +59,46 @@ export class CatalogRepositoryImpl implements CatalogRepository {
         TE.fromTask(() => this.collection.findOne({id: id}))
     );
 
-    getItemsByTags = (tags: string[], skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
-        TE.fromTask(() => this.collection.find({tags: {$in: tags}}).skip(skip).limit(limit).toArray())
+    getItemsByTags = (tags: string[], sort_type: SortType, skip: number, limit: number): TaskEither<Error, CatalogItem[]> => pipe(
+        TE.Do,
+        TE.bind("sort_type", () => {
+            let sorting_filter: Sort;
+
+            const CHEAPEST_FIRST: Sort = {price: 1};
+            const EXPENSIVE_FIRST: Sort = {price: -1};
+            const DISCOUNTER_FIRST: Sort = {discount: 1};
+            const NEWEST_FIRST: Sort = {createdAt: -1, updatedAt: -1};
+            const ALPHABETICALLY: Sort = {name: 1};
+
+            switch (sort_type) {
+                case SortType.CHEAPEST_FIRST: {
+                    sorting_filter = CHEAPEST_FIRST;
+                    break
+                }
+                case SortType.EXPENSIVE_FIRST: {
+                    sorting_filter = EXPENSIVE_FIRST;
+                    break
+                }
+                case SortType.DISCOUNTED_FIRST: {
+                    sorting_filter = DISCOUNTER_FIRST;
+                    break
+                }
+                case SortType.NEWEST_FIRST: {
+                    sorting_filter = NEWEST_FIRST;
+                    break
+                }
+                case SortType.ALPHABETICALLY: {
+                    sorting_filter = ALPHABETICALLY;
+                    break
+                }
+                default: {
+                    sorting_filter = NEWEST_FIRST;
+                    break
+                }
+            }
+            return TE.of(sorting_filter);
+        }),
+        TE.chain(({sort_type}) => TE.fromTask(() => this.collection.find({tags: {$in: tags}}).sort(sort_type).skip(skip).limit(limit).toArray()))
     );
 
     updateItem = (item: CatalogItem): TaskEither<Error, CatalogItem | null> => pipe(
