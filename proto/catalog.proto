@@ -4,6 +4,14 @@ package catalog;
 
 option go_package = ".";
 
+enum SortType {
+  CHEAPEST_FIRST = 0;
+  EXPENSIVE_FIRST = 1;
+  DISCOUNTED_FIRST = 2;
+  NEWEST_FIRST = 3;
+  ALPHABETICALLY = 4;
+}
+
 message CatalogItem {
   string id = 1;
   string sku = 2;
