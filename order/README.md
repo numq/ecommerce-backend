@@ -1,4 +1,4 @@
-# Stock microservice
+# Order microservice
 
 ___
 
@@ -10,8 +10,6 @@ ___
 - gRPC
 - TS-Proto
 - MongoDB
-
-![image](./media/food-delivery-backend-catalog.png)
 
 ## Setup:
 
