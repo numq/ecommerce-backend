@@ -1,4 +1,4 @@
-# Stock microservice
+# Catalog microservice
 
 ___
 
